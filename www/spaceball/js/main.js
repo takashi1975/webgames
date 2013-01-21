@@ -1,6 +1,7 @@
 // application object defining
 var app     = {
-    speed: 10 // app game speed
+    speed: 10,  // app game speed
+    k: 1        // app screen resolution coefficient
 };
 
 // defining of a wall object
@@ -17,15 +18,14 @@ app.wall   = {
     init: function(x, y, x2, y2, color, wallId) {
         // setting ID for this wall
         this.ID         = wallId;
-        
-        // creating of a wall
-        this.x          = x;
-        this.x2         = x2;
-        this.y          = y;
-        this.y2         = y2;
-        this.y2         = y2;
-        this.w          = x2 - x;
-        this.h          = y2 - y;
+
+        // creating of a wall according to screen resolution coefficient
+        this.x          = x * app.k;
+        this.x2         = x2 * app.k;
+        this.y          = y * app.k;
+        this.y2         = y2 * app.k;
+        this.w          = this.x2 - this.x;
+        this.h          = this.y2 - this.y;
         this.color      = color;
         this.el         = $('<i class="wall" />');
         this.el.css({
@@ -38,7 +38,7 @@ app.wall   = {
 
         // add a wall element to a page
         $('body').append(this.el);
-        
+
         // resolve a collision for a wall (adding wall obj link to the tree nodes)
         app.collision.resolve(this);
 
@@ -50,10 +50,10 @@ app.wall   = {
 app.collision   = {
     // set a tree density in pixels
     treeDensity: 100,
-    
+
     // defining of a tree object for optimizing of collisions detection
     tree: {},
-    
+
     // checking of collission between two objects
     testCollision: function(obj, obj2) {
         // defining of collision type
@@ -64,55 +64,55 @@ app.collision   = {
             if (obj.y < obj2.y && obj.y2 < obj2.y2) {
                 collisionType   += 'T';
             }
-            
+
             // check bottom collision
             if (obj.y > obj2.y && obj.y2 > obj2.y2) {
                 collisionType   += 'B';
             }
-            
+
             // check left collision
             if (obj.x < obj2.x && obj.x2 < obj2.x2) {
                 collisionType   += 'L';
             }
-            
+
             // check right collision
             if (obj.x > obj2.x && obj.x2 > obj2.x2) {
                 collisionType   += 'R';
             }
-            
+
             if (!collisionType) {
                 // it is center collision type
                 collisionType += 'C';
             }
-            
+
             return collisionType;
         } else {
             // no collission
             return false;
         }
     },
-    
+
     // checking of collisions of object with other objects in resolved treeNodes
     checkCollisions: function(treeNodes, obj) {
         // this alias
         var self            = this;
-        
+
         // define collisions array
         var collisions      = Array();
-        
+
         // temporary array of already tested objects for eleminating
         // of double checking and dublicates in collisions array
         var alreadyTested   = Array();
-        
+
         // check each resolved tree node for objects
         $(treeNodes).each(function(nodeKey, nodeItem) {
             // check if this node is not empty
             if (!$.isEmptyObject(self.tree[nodeItem])) {
                 // this node is not empty
-                // check each object of tree node for collision            
+                // check each object of tree node for collision
                 $.each(self.tree[nodeItem], function(objKey, objItem) {
                     // if this object was not tested yet
-                    if ($.inArray(objItem.ID, alreadyTested) == -1) {                    
+                    if ($.inArray(objItem.ID, alreadyTested) == -1) {
                         // check collission between two objects
                         var collision   = self.testCollision(obj, objItem);
                         if (collision) {
@@ -129,39 +129,39 @@ app.collision   = {
                 });
             }
         });
-        
+
         // return array of collisions
         return collisions;
     },
-    
+
     // collision detection resolving and returning objects array that has
     // collision with this object
-    resolve: function(obj) {        
+    resolve: function(obj) {
         // resolving in nodes tree (collision performance optimisation)
         // finding tree nodes where object is present
         var treeNodes       = this.treeResolve(obj);
-        
+
         // defining collisions variable for returning
         var collisions;
-        
+
         // cleaning of nodes tree from obj
         this.cleanTreeFromObject(obj);
-        
+
         // check for collissions with other objects in resolved treeNodes
         collisions          = this.checkCollisions(treeNodes, obj);
-        
+
         // adding object in resolved treeNodes
         this.addObjectToTreeNodes(obj, treeNodes);
-        
+
         // return collissions as a result of resolving of collisions detection
         return collisions;
     },
-    
+
     // removing of obj from tree nodes that saved in obj treeNodes property
     cleanTreeFromObject: function(obj) {
         // this tree alias
         var tree        = this.tree;
-        
+
         if (obj.treeNodes) {
             // object was saved in some tree nodes, lets clean them
             $(obj.treeNodes).each(function(key, item) {
@@ -170,48 +170,48 @@ app.collision   = {
             });
         }
     },
-    
+
     // adding of object to tree nodes that has been resolved and adding resolved
     // tree nodes to treeNodes property of an object
     addObjectToTreeNodes: function(obj, treeNodes) {
         // setting resolved treeNodes to object property
         obj.treeNodes   = treeNodes;
-        
+
         // this tree alias
         var tree        = this.tree;
-        
+
         // adding object to tree nodes that has been resolved for this object
         $(treeNodes).each(function(key, item) {
             if (!tree[item]) {
                 // need to add this tree node first
                 tree[item]  = {};
             }
-            
+
             // adding an object link to this tree node
             tree[item][obj.ID]  = obj;
         });
     },
-    
+
     // resolving object in a tree for finding in what tree node is object placed
     // and removing object from tree nodes where object not placed any more
     treeResolve: function(obj) {
         // defining an array where obj is placed at the moment
         var treeNodes       = Array();
-        
+
         // get top left corner of object tree node ID
         var treeNodeX_tl    = Math.floor(obj.x / this.treeDensity);
         var treeNodeY_tl    = Math.floor(obj.y / this.treeDensity);
-        
+
         // get tree node ID for left top corner of object
         var treeNode_tl     = treeNodeX_tl + '-' + treeNodeY_tl;
-        
+
         // get bottom right corner of object tree node ID
         var treeNodeX_br    = Math.floor(obj.x2 / this.treeDensity);
         var treeNodeY_br    = Math.floor(obj.y2 / this.treeDensity);
-        
+
         // get tree node ID for bottom right corner of object
         var treeNode_br     = treeNodeX_br + '-' + treeNodeY_br;
-        
+
         // check if this object is placed in one single tree node
         if (treeNode_tl == treeNode_br) {
             // object is placed in one single tree node
@@ -221,10 +221,10 @@ app.collision   = {
             // finding all nodes where placed an object
             treeNodes   = this.findAllNodes(treeNodeX_tl, treeNodeX_br, treeNodeY_tl, treeNodeY_br);
         }
-        
+
         return treeNodes;
     },
-    
+
     // finding of all nodes if object placed in several (top left corner and
     // bottom right corner are placed in different tree nodes)
     // x,x2 - tree nodes start and end X ID
@@ -240,7 +240,7 @@ app.collision   = {
                 treeNodes.push(nodeID);
             }
         }
-        
+
         // returning of tree nodes array
         return treeNodes;
     }
@@ -257,21 +257,29 @@ app.brick   = {
     w: 100,         // width of a brick
     h: 50,          // height of a brick
     color: 'blue',  // color of a brick
-    
-    // coordinates setter
+
+    // coordinates setter according to screen resolution coefficient
     setXY: function(x,y) {
         this.x          = x;
         this.x2         = this.x + this.w;
         this.y          = y;
         this.y2         = this.y + this.h;
     },
-    
+
     init: function(x, y, color, brickId) {
         // setting ID for this ball
         this.ID         = brickId;
-        
+
+        // recalculation of width/height according to screen resolution coefficient
+        this.w          = this.w * app.k;
+        this.h          = this.h * app.k;
+
+        // recalculation of brick coordinates according to screen resolution coefficient
+        this.x          = x * app.k;
+        this.y          = y * app.k;
+
         // creating of a brick
-        this.setXY(x, y);
+        this.setXY(this.x, this.y);
         this.color      = color;
         this.el         = $('<i class="brick" />');
         this.el.css({
@@ -284,29 +292,29 @@ app.brick   = {
 
         // add a brick element to a page
         $('body').append(this.el);
-        
+
         // resolve a collision for a brick (adding brick link to the tree nodes)
         app.collision.resolve(this);
 
         return this;
     },
-    
+
     destroy: function() {
         // this alias
         var self = this;
-        
+
         // destroy this brick DOM element
         this.el.addClass('blast');
         var timeoutID = window.setTimeout(function() {
             self.el.remove();
         }, 1000);
-        
+
         // remove brick object from nodes tree
         app.collision.cleanTreeFromObject(this);
-        
+
         // update score +10 points
         app.statistics.updateScore(10);
-        
+
         // destroy this object
         delete app.bricks[this.ID];
         delete this;
@@ -330,14 +338,14 @@ app.ball    = {
     directionX: 1,      // direction of a horizontal flying of a ball (left to right)
     directionY: -1,     // direction of a vertical flying of a ball (bottom to top)
     color: '#A2A2A2',   // color of a ball
-    
+
     // coordinates setter
     setXY: function(x,y) {
         this.x          = x;
         this.x2         = this.x + this.w;
         this.y          = y;
         this.y2         = this.y + this.h;
-    },    
+    },
 
     fly: function() {
         // calculation of horizontal and vertical speed components of a ball
@@ -352,7 +360,7 @@ app.ball    = {
         // setting new ball coordinates
         this.setXY(newX, newY);
     },
-    
+
     // changing of ball flying direction according to collision type with object
     changeBallFlyingDirection: function(item) {
         // check type of collision
@@ -390,38 +398,38 @@ app.ball    = {
                 break;
         }
     },
-    
+
     // collision for brick handling
     brickCollision: function(item) {
         // sound for collision
         app.sounds.play('brick');
-        
+
         // ball fly direction changing
         this.changeBallFlyingDirection(item);
 
         // destroying a brick
         item.obj.destroy();
-        
+
         // check for winning the game (no more bricks on field left)
         if (!Object.keys(app.bricks).length) {
             // go to the next level (level + 1)
             app.statistics.updateLevel(1);
-            
+
             // ball coordinates to rocket position setting
             var ballX  = app.rocket.x + app.rocket.w / 2 - 10;
             var ballY  = app.rocket.y - 20;
             this.setXY(ballX, ballY);
         }
-    },    
-    
+    },
+
     // collision for rocket handling
     rocketCollision: function(item) {
         // sound for collision
         app.sounds.play('rocket');
-        
+
         // ball fly direction changing
         this.changeBallFlyingDirection(item);
-        
+
         // check if ball change angle after rocket top collision
         if (item.type == 'T' || item.type == 'TR' || item.type == 'TL') {
             // top collision of a ball and a rocket
@@ -438,38 +446,38 @@ app.ball    = {
                 // lets change ball flying direction to the left
                 this.directionX = -1;
             }
-            
+
             // get max possible distance
             var maxDistance         = app.rocket.w / 2 + this.w / 2;
-            
+
             // defining max possible angle of ball flying after collision
             var maxAngle            = 90;
-            
+
             // get new angle of ball flying
             var newAngle            = (maxDistance - Math.abs(distance)) * maxAngle / maxDistance;
-            
+
             // new angle cannot be less than 20
             if (newAngle < 20) {
                 newAngle            = 20;
             }
-            
+
             // set new angle to the ball
             this.angle              = newAngle;
         }
     },
-    
+
     // check for ball loosing
     wallCollision: function(item) {
         if(item.obj.ID == 'wall-bottom') {
             // ball is lost in the bottom wall
             this.destroy();
-            
+
             // check for loosing of last ball
             if (!Object.keys(app.balls).length) {
-                // last ball is lost                
+                // last ball is lost
                 // update lives -1 live
                 app.statistics.updateLives(-1);
-                
+
                 // check if it was the last ball than the game is over
                 if (app.statistics.lives < 1) {
                     app.messages.show('GAME OVER... HA HA HA!!!', function() {});
@@ -483,7 +491,7 @@ app.ball    = {
         } else {
             // sound for collision
             app.sounds.play('wall');
-            
+
             // ball fly direction changing
             this.changeBallFlyingDirection(item);
         }
@@ -492,13 +500,13 @@ app.ball    = {
     checkCollisions: function() {
         // this alias
         var self        = this;
-        
+
         // defining a collisions variable for a ball
         var collisions;
-        
+
         // resolve a collision of a ball
         collisions      = app.collision.resolve(this);
-        
+
         if (collisions.length > 0) {
             // there are some sollissions, lets handle them
             $(collisions).each(function(key, item) {
@@ -527,10 +535,17 @@ app.ball    = {
 
     init: function(ID, x, y) {
         // setting ID for this ball
-        this.ID        = ID;
-        
+        this.ID         = ID;
+
         // setting coordinates of a ball
         this.setXY(x, y);
+
+        // setting of ball dimensions according to screen resolution coefficient
+        this.w          = this.w * app.k;
+        this.h          = this.h * app.k;
+
+        // setting of a ball speed according to screen resolution coefficient
+        this.speed      = this.speed * app.k;
 
         // create a ball HTML element
         this.el         = $('<i class="ball" />');
@@ -544,24 +559,24 @@ app.ball    = {
 
         // add a ball element to a page
         $('body').append(this.el);
-        
+
         return this;
     },
-    
+
     // destroying of a ball
-    destroy: function() {        
+    destroy: function() {
         // this alias
         var self    = this;
-        
+
         // destroy this ball DOM element
         this.el.addClass('blast');
         var timeoutID = window.setTimeout(function() {
             self.el.remove();
         }, 100000);
-        
+
         // remove brick object from nodes tree
         app.collision.cleanTreeFromObject(this);
-        
+
         // destroy this object
         delete app.balls[this.ID];
         delete this;
@@ -577,16 +592,16 @@ app.messages     = {
             messageEl.hide();
             callback();
         }, 3000);
-        
+
         return this;
     },
     init: function() {
         // create a message HTML element
         this.el         = $('<div class="message" />');
-        
+
         // add a message element to a page
         $('body').append(this.el);
-        
+
         return this;
     }
 };
@@ -603,7 +618,7 @@ app.rocket      = {
     w: 200,             // default width of a ball
     h: 50,              // default height of a ball
     color: '#2C003E',   // color of a rocket
-    
+
     // coordinates setter
     setXY: function(x,y) {
         this.x          = x;
@@ -611,11 +626,18 @@ app.rocket      = {
         this.y          = y;
         this.y2         = this.y + this.h;
     },
-    
-    // initialization method    
+
+    // initialization method
     init: function() {
         // this rocket alias
         var self        = this;
+
+        this.w          = this.w * app.k;
+        this.h          = this.h * app.k;
+        this.x          = this.x * app.k;
+        this.y          = this.y * app.k;
+        this.x2         = this.x2 * app.k;
+        this.y2         = this.y2 * app.k;
 
         // rocket coordinates setting
         this.setXY(this.x, this.y);
@@ -632,7 +654,7 @@ app.rocket      = {
 
         // add a rocket element to a page
         $('body').append(this.el);
-        
+
         // resolve a collision for a rocket (adding brick link to the tree nodes)
         app.collision.resolve(this);
 
@@ -643,33 +665,33 @@ app.rocket      = {
             self.setXY(newX, self.y);
         });
     },
-    
+
     // draw a rocket in new position
     draw: function() {
         // this alias
         var self        = this;
-        
+
         // defining of a variable for a new X position of a rocket
         var newX;
-        
+
         // walls boundries handling
         if (this.x <= app.walls.left.x2) {
             // left wall collision
             newX    = app.walls.left.x2;
             this.setXY(newX, this.y);
         }
-        
+
         if (this.x2 >= app.walls.right.x) {
             // right wall collision
             newX    = app.walls.right.x - this.w;
             this.setXY(newX, this.y);
         }
-        
+
         // resolve a collision for a rocket
         var collisions  = app.collision.resolve(this);
-        
+
         // setting of new coordinates to rocket element
-        this.el.css("left", this.x);     
+        this.el.css("left", this.x);
     }
 };
 
@@ -682,54 +704,54 @@ app.statistics   = {
         // create a score HTML element
         this.scoreEl         = $('<b class="score" />');
         this.scoreEl.html("Score: " + this.score);
-        
+
         // create a score HTML element
         this.livesEl         = $('<b class="lives" />');
         this.livesEl.html("Lives: " + this.lives);
-        
+
         // create a level HTML element
         this.levelEl         = $('<b class="level" />');
         this.levelEl.html("Level: " + this.level);
-        
+
         // adding level CSS class to the body
         $('body').addClass('level-' + this.level);
-        
+
         // add a score, level and lives elements to a page
         $('body').append(this.livesEl, this.scoreEl, this.levelEl);
     },
-    
+
     // updating score
     updateScore: function(points) {
         this.score += points;
         this.scoreEl.html("Score: " + this.score);
     },
-    
+
     // updating lives
     updateLives: function(live) {
         this.lives += live;
         this.livesEl.html("Lives: " + this.lives);
     },
-    
+
     // updating level
     updateLevel: function(level) {
         // removing of level CSS classes from body
         $('body').removeClass('level-' + this.level);
-        
+
         // updating a level
         this.level += level;
         this.levelEl.html("Level: " + this.level);
-        
+
         if (this.level > this.maxLevels) {
             // player is win (finished last max level)
             alert('Congratulations, you win!');
         } else {
             // building new bricks field
             app.buildBricksField();
-            
+
             // next level
             // adding level CSS class to the body
             $('body').addClass('level-' + this.level);
-            
+
             // update ball prototype speed
             app.ball.speed  += 0.25;
         }
@@ -755,12 +777,12 @@ app.buildBricksField    = function() {
 app.sounds  = {
     // defining of audio context
     context: new webkitAudioContext(),
-    
+
     // loading errors handler
     onError: function() {
         console.warn('file loading error');
     },
-    
+
     // loading sound method
     loadSound: function(url, snd) {
         //var url     = app.sounds[sound];
@@ -774,12 +796,12 @@ app.sounds  = {
                 app.sounds[snd] = buffer;
             }, app.sounds.onError);
         }
-        
+
         // sending request for loading
         request.send();
     },
-    
-    // sound playing method    
+
+    // sound playing method
     play: function(snd) {
         var soundBuffer     = app.sounds[snd];
         if (soundBuffer) {
@@ -790,8 +812,8 @@ app.sounds  = {
             source.noteOn(0);                                       // play the source now
         }
     },
-    
-    
+
+
     // sounds initialization
     init: function() {
         // loading sounds
@@ -815,8 +837,8 @@ app.init    = function() {
     app.rocket.init();
 
     // building of bricks field
-    app.buildBricksField();    
-    
+    app.buildBricksField();
+
     // defining of game field walls boundries
     app.walls   = {
         top: Object.create(app.wall).init(0, 0, 1000, 50, 'red', 'wall-top'),
@@ -824,13 +846,13 @@ app.init    = function() {
         right: Object.create(app.wall).init(950, 50, 1000, 600, 'green', 'wall-right'),
         bottom: Object.create(app.wall).init(0, 600, 1000, 650, 'orange', 'wall-bottom')
     };
-    
+
     // statistics initialization
     app.statistics.init();
-    
+
     // sounds initialization
     app.sounds.init();
-    
+
     // messages initialization
     app.messages.init();
 };
@@ -839,7 +861,7 @@ app.init    = function() {
 app.timerAction = function() {
     // defining of a new rocket position variable
     var newRocketX;
-    
+
     // draw a rocket in new position
     app.rocket.draw();
 
@@ -848,7 +870,7 @@ app.timerAction = function() {
         // drawing a specific ball in new position
         app.balls[key].draw();
     });
-    
+
     // demo mode
     if (app.demo) {
         // demo mode is enabled
