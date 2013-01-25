@@ -1,6 +1,5 @@
 // application object defining
 var app     = {
-    speed: 10,  // app game speed
     k: 1        // app screen resolution coefficient
 };
 
@@ -855,6 +854,10 @@ app.init    = function() {
 
     // messages initialization
     app.messages.init();
+    
+    // defining timer for app with actions that need to be handled with time
+    // app.timer       = setInterval(app.timerAction, app.speed);
+    app.timer       = app.timerAction();
 };
 
 // defining a timer actions that need to be handled with time intervals
@@ -878,10 +881,12 @@ app.timerAction = function() {
         newRocketX  = app.balls['ball-1'].x - app.rocket.w / 2 + Math.random(100) * 100 - Math.random(100) * 100;
         app.rocket.setXY(newRocketX, app.rocket.y);
     }
+    
+    webkitRequestAnimationFrame(app.timerAction);
+    return this;
 };
 
-// defining timer for app with actions that need to be handled with time
-app.timer       = setInterval(app.timerAction, app.speed);
+
 
 // gamepad initialization
 var gamepad = new Gamepad();
