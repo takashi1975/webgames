@@ -10,19 +10,15 @@
     var b2CircleShape   = Box2D.Collision.Shapes.b2CircleShape;
     var b2DebugDraw     = Box2D.Dynamics.b2DebugDraw;
 
-    // canvas creating
-    var canvas  = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 768;
-    //document.body.appendChild(canvas);
+   
 
     // world creating function wrapper
     var Physics = {
-        init: function(element, scale) {
+        init: function(scale) {
             var gravity         = new b2Vec2(0, 9.8);
             this.world          = new b2World(gravity, true);
-            this.element        = element;
-            this.context        = element.getContext("2d");
+            //this.element        = element;
+            //this.context        = element.getContext("2d");
             this.scale          = scale || 30;
             this.dtRemaining    = 0;
             this.stepAmount     = 1 / 60;
@@ -43,19 +39,41 @@
             }
         },
 
-        debug: function() {
-            this.debugDraw = new b2DebugDraw();
-            this.debugDraw.SetSprite(this.context);
-            this.debugDraw.SetDrawScale(this.scale);
-            this.debugDraw.SetFillAlpha(0.3);
-            this.debugDraw.SetLineThickness(1.0);
-            this.debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
-            this.world.SetDebugDraw(this.debugDraw);
+        debug: function(flag) {
+            if (flag) {
+                // debugging is enabled
+                // removing of CAAT canvas
+                var caatCanvas  = document.querySelectorAll('canvas')[0];
+                caatCanvas.parentNode.removeChild(caatCanvas);
+                
+                // adding canvas for debugging
+                // canvas creating
+                var canvas          = document.createElement('canvas');
+                canvas.width        = 1024;
+                canvas.height       = 768;
+                canvas.setAttribute("class", "debug");
+                document.body.appendChild(canvas);
+
+                this.element        = canvas;
+                this.context        = canvas.getContext("2d");
+
+                this.debugDraw = new b2DebugDraw();
+                this.debugDraw.SetSprite(this.context);
+                this.debugDraw.SetDrawScale(this.scale);
+                this.debugDraw.SetFillAlpha(0.3);
+                this.debugDraw.SetLineThickness(1.0);
+                this.debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+                this.world.SetDebugDraw(this.debugDraw);
+                
+                console.log('DEBUG MODE ENABLED');
+            } else {
+                console.log('CAAT MODE ENABLED');
+            }
         }
     };
 
     // world initialization
-    Physics.init(canvas);
+    Physics.init();
 
     // body prototype
     var Body = {
@@ -162,7 +180,7 @@
         lastFrame = tm;
     };
 */
-    //Physics.debug();
+
     //webkitRequestAnimationFrame(gameLoop);
 
     // CAAT initializing
@@ -172,21 +190,43 @@
 
     var circle      = new CAAT.ShapeActor().
             setLocation(20,20).
-            setSize(60,60).
-            setFillStyle('#ffffff').
+            setSize(150, 150).
+            setFillStyle('red').
             setStrokeStyle('#333333');
 
     scene.addChild(circle);
-
+    
+    var circle2     = new CAAT.ShapeActor().
+            setLocation(20,20).
+            setSize(150, 150).
+            setFillStyle('green').
+            setStrokeStyle('#333333');
+        
+    scene.addChild(circle2);
+    
+    var circle3     = new CAAT.ShapeActor().
+            setLocation(20,20).
+            setSize(150, 150).
+            setFillStyle('blue').
+            setStrokeStyle('#333333');
+        
+    scene.addChild(circle3);
+    
     director.onRenderStart= function(director_time) {
         //this.world.Step(1.0/60, 1,1);
         //this.world.ClearForces();
         //console.log('111');
-        Physics.step(1/60, 1,1);
+        Physics.step(1/60, 1, 1);
         //console.log(balls.first.body.m_xf.position.x);
-        circle.setLocation(balls.third.body.m_xf.position.x * 10, balls.third.body.m_xf.position.y * 10);
+        circle.setLocation(balls.first.body.m_xf.position.x * 30, balls.first.body.m_xf.position.y * 30);
+        circle2.setLocation(balls.second.body.m_xf.position.x * 30, balls.second.body.m_xf.position.y * 30);
+        circle3.setLocation(balls.third.body.m_xf.position.x * 30, balls.third.body.m_xf.position.y * 30);
+        //console.log(balls.third.body.m_userData.details.radius);
         //Physics.ClearForces();
     };
 
     director.loop(1);
+    
+    // enabling or disabling debug mode Physics.debug(true/false);
+    Physics.debug(true);
 

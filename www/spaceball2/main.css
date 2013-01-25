@@ -1,7 +1,8 @@
 body {
-    -webkit-backface-visibility: hidden;
+    /*-webkit-backface-visibility: hidden;
     -webkit-perspective: 1000;
-    -webkit-transform: translateZ(0);
+    -webkit-transform: translateZ(0);*/
+    background: #000;
 }
 
 body.level-1 {
