@@ -150,7 +150,7 @@
     balls.third     = Object.create(Body).init(Physics, {shape:"circle", x:8, y:3});
 
     var lastFrame = new Date().getTime();
-
+/*
     var gameLoop = function() {
         var tm = new Date().getTime();
         webkitRequestAnimationFrame(gameLoop);
@@ -161,7 +161,7 @@
         Physics.step(dt);
         lastFrame = tm;
     };
-
+*/
     Physics.debug();
     //webkitRequestAnimationFrame(gameLoop);
 
@@ -182,6 +182,8 @@
         //this.world.Step(1.0/60, 1,1);
         //this.world.ClearForces();
         //console.log('111');
+        Physics.step(1/60, 1,1);
+        //Physics.ClearForces();
     };
 
     director.loop(1);
