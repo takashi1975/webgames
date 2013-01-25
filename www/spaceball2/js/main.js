@@ -14,7 +14,7 @@
     var canvas  = document.createElement('canvas');
     canvas.width = 1024;
     canvas.height = 768;
-    document.body.appendChild(canvas);
+    //document.body.appendChild(canvas);
 
     // world creating function wrapper
     var Physics = {
@@ -162,7 +162,7 @@
         lastFrame = tm;
     };
 */
-    Physics.debug();
+    //Physics.debug();
     //webkitRequestAnimationFrame(gameLoop);
 
     // CAAT initializing
@@ -173,8 +173,8 @@
     var circle      = new CAAT.ShapeActor().
             setLocation(20,20).
             setSize(60,60).
-            setFillStyle('#ff0000').
-            setStrokeStyle('#000000');
+            setFillStyle('#ffffff').
+            setStrokeStyle('#333333');
 
     scene.addChild(circle);
 
@@ -183,6 +183,8 @@
         //this.world.ClearForces();
         //console.log('111');
         Physics.step(1/60, 1,1);
+        //console.log(balls.first.body.m_xf.position.x);
+        circle.setLocation(balls.third.body.m_xf.position.x * 10, balls.third.body.m_xf.position.y * 10);
         //Physics.ClearForces();
     };
 
