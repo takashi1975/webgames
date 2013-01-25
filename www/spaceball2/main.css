@@ -1,0 +1,89 @@
+body {
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    -webkit-transform: translateZ(0);
+}
+
+body.level-1 {
+    background: url('img/bg1.jpg');    
+}
+
+body.level-2 {
+    background: url('img/bg2.jpg');    
+}
+
+body.level-3 {
+    background: url('img/bg3.jpg');    
+}
+
+body.level-4 {
+    background: url('img/bg4.jpg');    
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.ball,
+.brick,
+.rocket,
+.wall,
+.score,
+.lives,
+.level {
+    display: block;
+    position: absolute;
+}
+
+.score,
+.lives,
+.level {
+    left: 1020px;
+    color: white;
+    top: 20px;
+    font: 30px/34px Arial;
+}
+
+.lives {
+    top: 60px;
+ }
+ 
+ .level {
+    top: 100px;
+ }
+
+.ball {
+    border-radius: 20px;
+    background: url('img/ball.png');
+    -webkit-background-size: cover;
+}
+
+.brick {
+    border-radius: 10px;
+    box-shadow: inset 0 0 25px black;
+    border: 1px solid #000;
+}
+
+.blast {
+    -webkit-transition: all 1s;    
+    -webkit-filter: blur(10px) contrast(5.6) brightness(0.3) opacity(0);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.rocket {
+    border-radius: 10px;
+    box-shadow: inset 0 0 25px black;
+}
+
+.message {
+    position: absolute;
+    display: block;
+    z-index: 1;
+    width: 100%;
+    height: 500px;
+    text-align: center;
+    color: #fff;
+    font: bold 80px/500px Arial;
+}
