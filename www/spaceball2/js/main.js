@@ -1,4 +1,3 @@
-window.onload = function() {
     // references for Box2D general objects for simplicity
     var b2Vec2          = Box2D.Common.Math.b2Vec2;
     var b2BodyDef       = Box2D.Dynamics.b2BodyDef;
@@ -154,7 +153,7 @@ window.onload = function() {
 
     var gameLoop = function() {
         var tm = new Date().getTime();
-        window.requestAnimationFrame(gameLoop);
+        webkitRequestAnimationFrame(gameLoop);
         var dt = (tm - lastFrame) / 1000;
         if (dt > 1/15) {
             dt = 1/15;
@@ -164,5 +163,26 @@ window.onload = function() {
     };
 
     Physics.debug();
-    window.requestAnimationFrame(gameLoop);
-};
+    //webkitRequestAnimationFrame(gameLoop);
+
+    // CAAT initializing
+    var director    = new CAAT.Director().initialize(1024, 768);
+
+    var scene       = director.createScene();
+
+    var circle      = new CAAT.ShapeActor().
+            setLocation(20,20).
+            setSize(60,60).
+            setFillStyle('#ff0000').
+            setStrokeStyle('#000000');
+
+    scene.addChild(circle);
+
+    director.onRenderStart= function(director_time) {
+        //this.world.Step(1.0/60, 1,1);
+        //this.world.ClearForces();
+        //console.log('111');
+    };
+
+    director.loop(1);
+
