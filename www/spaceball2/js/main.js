@@ -139,7 +139,18 @@
             this.definition.position = new b2Vec2(details.x || 0, details.y || 0);
             this.definition.linearVelocity = new b2Vec2(details.vx || 0, details.vy || 0);
             this.definition.userData = this;
-            this.definition.type = details.type == "static" ? b2Body.b2_staticBody : b2Body.b2_dynamicBody;
+            this.definition.type = details.type;
+            switch (details.type) {
+                case "static":
+                    this.definition.type = b2Body.b2_staticBody;
+                    break;
+                case "brick":
+                    this.definition.type = b2Body.b2_staticBody;
+                    break;
+                default:
+                    this.definition.type = b2Body.b2_dynamicBody;
+                    break;
+            }
 
             // Create the Body
             this.body = physics.world.CreateBody(this.definition);
@@ -179,7 +190,7 @@
                     var bodyA = contact.GetFixtureA().GetBody().GetUserData();
                     // first collision
                     //console.log('collision', bodyA, first);
-                    if (bodyA.details.type == 'static') {
+                    if (bodyA.details.type == 'brick') {
                         //console.log('collision', bodyA, first);
                         destroyQueue.push(bodyA);
                     }
@@ -200,20 +211,24 @@
     walls.right     = Object.create(Body).init(Physics, {type:"static", x:32, y:0, height:50.5,  width:1, id: "right"});
     walls.top       = Object.create(Body).init(Physics, {type:"static", x:0, y:0.5, height:1, width:65, id: "top"});
     walls.bottom    = Object.create(Body).init(Physics, {type:"static", x:0, y:24.7, height:1, width:65, id: "bottom"});
-    walls.plane     = Object.create(Body).init(Physics, {type:"static", x:16, y:10, height:1, width:15, id: "plane"});
-    walls.plane2    = Object.create(Body).init(Physics, {type:"static", x:18, y:12, height:1, width:5, id: "plane2"});
-    walls.plane3    = Object.create(Body).init(Physics, {type:"static", x:20, y:16, height:1, width:3, id: "plane3"});
-    walls.plane4    = Object.create(Body).init(Physics, {type:"static", x:8, y:18, height:1, width:6, id: "plane4"});
+    
+    for (var i = 1; i < 11; i += 1) {
+        for (var k = 1; k < 5; k += 1) {
+            var brick_id = i + '-' + k;
+            walls[brick_id]    = Object.create(Body).init(Physics, {type:"brick", x:i * 3, y: k + 1, height:1,  width:3, id: brick_id});
+        }
+    }
     
     //Physics.world.DestroyBody(walls.top);
 
     // dynamic objects
     var balls       = {};
-    balls.first     = Object.create(Body).init(Physics, {shape:"circle", x:5, y:4});
-    balls.second    = Object.create(Body).init(Physics, {shape:"circle", x:13, y:8});
-    balls.third     = Object.create(Body).init(Physics, {shape:"circle", x:8, y:3});
-    balls.third.ApplyImpulse({ x: 5, y: 5 }, balls.third.GetWorldCenter());
-    balls.first.ApplyImpulse({ x: -2, y: 1 }, balls.first.GetWorldCenter());
+    balls.first     = Object.create(Body).init(Physics, {shape:"circle", x:5, y:14});
+    balls.second    = Object.create(Body).init(Physics, {shape:"circle", x:13, y:18});
+    balls.third     = Object.create(Body).init(Physics, {shape:"circle", x:8, y:13});
+    balls.third.ApplyImpulse({ x: 10, y: 8 }, balls.third.GetWorldCenter());
+    balls.first.ApplyImpulse({ x: -8, y: 4 }, balls.first.GetWorldCenter());
+    balls.second.ApplyImpulse({ x: 8, y: -6 }, balls.second.GetWorldCenter());
 
     var lastFrame = new Date().getTime();
 /*
