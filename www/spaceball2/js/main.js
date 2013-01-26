@@ -15,13 +15,16 @@
     // world creating function wrapper
     var Physics = {
         init: function(scale) {
-            var gravity         = new b2Vec2(0, 9.8);
+            //var gravity         = new b2Vec2(0, 9.8);
+            var gravity         = new b2Vec2(0, 0);
             this.world          = new b2World(gravity, true);
             //this.element        = element;
             //this.context        = element.getContext("2d");
             this.scale          = scale || 30;
             this.dtRemaining    = 0;
             this.stepAmount     = 1 / 60;
+            
+            this.collision();
 
             return this;
         },
@@ -37,6 +40,24 @@
             if (this.debugDraw) {
                 this.world.DrawDebugData();
             }
+        },
+        
+        collision: function () {
+            this.listener = new Box2D.Dynamics.b2ContactListener();
+            this.listener.PostSolve = function (contact, impulse) {
+                
+                var bodyA = contact.GetFixtureA().GetBody().GetUserData(),
+                    bodyB = contact.GetFixtureB().GetBody().GetUserData();
+ 
+                if (bodyA.contact) {
+                    bodyA.contact(contact, impulse, true)
+                }
+                
+                if (bodyB.contact) {
+                    bodyB.contact(contact, impulse, false)
+                }
+            };
+            this.world.SetContactListener(this.listener);
         },
 
         debug: function(flag) {
@@ -81,13 +102,16 @@
             shape: "block",
             width: 5,
             height: 5,
-            radius: 2.5
+            //radius: 2.5
+            radius: 0.3
         },
 
         fixtureDefaults: {
             density: 2,
-            friction: 1,
-            restitution: 0.2
+            //friction: 1,
+            friction: 0,
+            //restitution: 0.2
+            restitution: 1
         },
 
         definitionDefaults: {
@@ -96,7 +120,8 @@
             angle: 0,
             angularVelocity: 0,
             awake: true,
-            bullet: false,
+            //bullet: false,
+            bullet: true,
             fixedRotation: false
         },
 
@@ -148,24 +173,47 @@
             };
 
             this.body.CreateFixture(this.fixtureDef);
+            
+            this.contact = function (contact, impulse, first) {                
+                if (first) {
+                    var bodyA = contact.GetFixtureA().GetBody().GetUserData();
+                    // first collision
+                    //console.log('collision', bodyA, first);
+                    if (bodyA.details.type == 'static') {
+                        //console.log('collision', bodyA, first);
+                        destroyQueue.push(bodyA);
+                    }
+                    
+                }
+            };
 
-            return this;
+            return this.body;
         }
     };
-
+    
+    // destroying queue
+    var destroyQueue    = Array();
+    
     // walls of world static
     var walls       = {};
-    walls.left      = Object.create(Body).init(Physics, {type:"static", x:0.5, y:0, height:50.5,  width:1});
-    walls.right     = Object.create(Body).init(Physics, {type:"static", x:32, y:0, height:50.5,  width:1});
-    walls.top       = Object.create(Body).init(Physics, {type:"static", x:0, y:0.5, height:1, width:65});
-    walls.bottom    = Object.create(Body).init(Physics, {type:"static", x:0, y:24.7, height:1, width:65});
-    walls.plane     = Object.create(Body).init(Physics, {type:"static", x:16, y:10, height:1, width:15});
+    walls.left      = Object.create(Body).init(Physics, {type:"static", x:0.5, y:0, height:50.5,  width:1, id: "left"});
+    walls.right     = Object.create(Body).init(Physics, {type:"static", x:32, y:0, height:50.5,  width:1, id: "right"});
+    walls.top       = Object.create(Body).init(Physics, {type:"static", x:0, y:0.5, height:1, width:65, id: "top"});
+    walls.bottom    = Object.create(Body).init(Physics, {type:"static", x:0, y:24.7, height:1, width:65, id: "bottom"});
+    walls.plane     = Object.create(Body).init(Physics, {type:"static", x:16, y:10, height:1, width:15, id: "plane"});
+    walls.plane2    = Object.create(Body).init(Physics, {type:"static", x:18, y:12, height:1, width:5, id: "plane2"});
+    walls.plane3    = Object.create(Body).init(Physics, {type:"static", x:20, y:16, height:1, width:3, id: "plane3"});
+    walls.plane4    = Object.create(Body).init(Physics, {type:"static", x:8, y:18, height:1, width:6, id: "plane4"});
+    
+    //Physics.world.DestroyBody(walls.top);
 
     // dynamic objects
     var balls       = {};
-    balls.first     = Object.create(Body).init(Physics, {shape:"circle", x:5, y:8});
+    balls.first     = Object.create(Body).init(Physics, {shape:"circle", x:5, y:4});
     balls.second    = Object.create(Body).init(Physics, {shape:"circle", x:13, y:8});
     balls.third     = Object.create(Body).init(Physics, {shape:"circle", x:8, y:3});
+    balls.third.ApplyImpulse({ x: 5, y: 5 }, balls.third.GetWorldCenter());
+    balls.first.ApplyImpulse({ x: -2, y: 1 }, balls.first.GetWorldCenter());
 
     var lastFrame = new Date().getTime();
 /*
@@ -190,7 +238,7 @@
 
     var circle      = new CAAT.ShapeActor().
             setLocation(20,20).
-            setSize(150, 150).
+            setSize(18, 18).
             setFillStyle('red').
             setStrokeStyle('#333333');
 
@@ -198,7 +246,7 @@
     
     var circle2     = new CAAT.ShapeActor().
             setLocation(20,20).
-            setSize(150, 150).
+            setSize(18, 18).
             setFillStyle('green').
             setStrokeStyle('#333333');
         
@@ -206,7 +254,7 @@
     
     var circle3     = new CAAT.ShapeActor().
             setLocation(20,20).
-            setSize(150, 150).
+            setSize(18, 18).
             setFillStyle('blue').
             setStrokeStyle('#333333');
         
@@ -216,11 +264,18 @@
         //this.world.Step(1.0/60, 1,1);
         //this.world.ClearForces();
         //console.log('111');
+        // destroying of objects in destroyQueue
+        for (key in destroyQueue) {
+          console.log(destroyQueue[key]); 
+          Physics.world.DestroyBody(destroyQueue[key].body);
+        }
+        // cleaning destroying queue
+        destroyQueue    = Array();
         Physics.step(1/60, 1, 1);
         //console.log(balls.first.body.m_xf.position.x);
-        circle.setLocation(balls.first.body.m_xf.position.x * 30, balls.first.body.m_xf.position.y * 30);
-        circle2.setLocation(balls.second.body.m_xf.position.x * 30, balls.second.body.m_xf.position.y * 30);
-        circle3.setLocation(balls.third.body.m_xf.position.x * 30, balls.third.body.m_xf.position.y * 30);
+        circle.setLocation(balls.first.m_xf.position.x * 30, balls.first.m_xf.position.y * 30);
+        circle2.setLocation(balls.second.m_xf.position.x * 30, balls.second.m_xf.position.y * 30);
+        circle3.setLocation(balls.third.m_xf.position.x * 30, balls.third.m_xf.position.y * 30);
         //console.log(balls.third.body.m_userData.details.radius);
         //Physics.ClearForces();
     };
