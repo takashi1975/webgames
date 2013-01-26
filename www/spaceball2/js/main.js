@@ -212,10 +212,12 @@
     walls.top       = Object.create(Body).init(Physics, {type:"static", x:0, y:0.5, height:1, width:65, id: "top"});
     walls.bottom    = Object.create(Body).init(Physics, {type:"static", x:0, y:24.7, height:1, width:65, id: "bottom"});
     
+    var bricks      = {};
+    
     for (var i = 1; i < 11; i += 1) {
         for (var k = 1; k < 5; k += 1) {
             var brick_id = i + '-' + k;
-            walls[brick_id]    = Object.create(Body).init(Physics, {type:"brick", x:i * 3, y: k + 1, height:1,  width:3, id: brick_id});
+            bricks[brick_id]    = Object.create(Body).init(Physics, {type:"brick", x:i * 3, y: k + 1, height:1,  width:3, id: brick_id});
         }
     }
     
@@ -283,7 +285,15 @@
         for (key in destroyQueue) {
           console.log(destroyQueue[key]); 
           Physics.world.DestroyBody(destroyQueue[key].body);
+          delete bricks[destroyQueue[key].details.id];
         }
+        
+        console.log(Object.keys(bricks).length);
+        
+        if (Object.keys(bricks).length < 1) {
+            console.log('YOU WIN!');
+        };
+        
         // cleaning destroying queue
         destroyQueue    = Array();
         Physics.step(1/60, 1, 1);
