@@ -167,6 +167,9 @@
                 case "circle":
                     details.radius = details.radius || this.defaults.radius;
                     this.fixtureDef.shape = new b2CircleShape(details.radius);
+                    this.fixtureDef.filter.categoryBits = 1;
+                    // circle will collide just with objects that has filter.categoryBits = 2
+                    this.fixtureDef.filter.maskBits = 2;
                     break;
                 case "polygon":
                     this.fixtureDef.shape = new b2PolygonShape();
@@ -180,6 +183,7 @@
                     this.fixtureDef.shape = new b2PolygonShape();
                     this.fixtureDef.shape.SetAsBox(details.width / 2,
                     details.height / 2);
+                    this.fixtureDef.filter.categoryBits = 2;
                     break;
             };
 
