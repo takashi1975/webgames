@@ -284,7 +284,38 @@
             setStrokeStyle('#333333');
             scene.addChild(bricks_caat[brick_id]);
         }
-    }    
+    }
+    
+    // rocket
+    var rocket = {
+        x: 16,
+        y: 21,
+        body: Object.create(Body).init(Physics, {type:"static", x:16, y:21, height:1, width:5, id: "rocket"}),
+        actor: new CAAT.ShapeActor().
+            setShape(CAAT.ShapeActor.prototype.SHAPE_RECTANGLE).
+            setLocation((this.x * 30 - 5 * 30), 21 * 30).
+            setSize(5 * 30, 30).
+            setFillStyle('orange').
+            setStrokeStyle('#333333')
+    };
+    
+    scene.addChild(rocket.actor);
+
+    var moveRocket  = function(e) {
+        if (e.x < 110) {
+            rocket.x = 110 / 30;
+        } else if (e.x > 860) {
+            rocket.x = 860 / 30;
+        } else {
+            rocket.x = e.x / 30;
+        }
+    };
+    
+    scene.mouseMove = moveRocket;    
+    scene.mouseClick = moveRocket;
+    scene.mouseDrag = moveRocket;
+    
+    
     
     director.onRenderStart= function(director_time) {
         //this.world.Step(1.0/60, 1,1);
@@ -292,7 +323,7 @@
         //console.log('111');
         // destroying of objects in destroyQueue
         for (key in destroyQueue) {
-          console.log(destroyQueue[key]); 
+          //console.log(destroyQueue[key]); 
           Physics.world.DestroyBody(destroyQueue[key].body);
           delete bricks[destroyQueue[key].details.id];
           
@@ -300,7 +331,10 @@
           scene.removeChild(bricks_caat[destroyQueue[key].details.id]);
         }
         
-        console.log(Object.keys(bricks).length);
+        rocket.body.SetPosition(new b2Vec2(rocket.x, 21));
+        rocket.actor.setLocation(rocket.x * 30 - 2.5 * 30, 21 * 30);
+        
+        //console.log(Object.keys(bricks).length);
         
         if (Object.keys(bricks).length < 1) {
             console.log('YOU WIN!');
