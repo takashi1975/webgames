@@ -10,7 +10,7 @@
     var b2CircleShape   = Box2D.Collision.Shapes.b2CircleShape;
     var b2DebugDraw     = Box2D.Dynamics.b2DebugDraw;
 
-   
+
 
     // world creating function wrapper
     var Physics = {
@@ -23,7 +23,7 @@
             this.scale          = scale || 30;
             this.dtRemaining    = 0;
             this.stepAmount     = 1 / 60;
-            
+
             this.collision();
 
             return this;
@@ -41,18 +41,18 @@
                 this.world.DrawDebugData();
             }
         },
-        
+
         collision: function () {
             this.listener = new Box2D.Dynamics.b2ContactListener();
             this.listener.PostSolve = function (contact, impulse) {
-                
+
                 var bodyA = contact.GetFixtureA().GetBody().GetUserData(),
                     bodyB = contact.GetFixtureB().GetBody().GetUserData();
- 
+
                 if (bodyA.contact) {
                     bodyA.contact(contact, impulse, true)
                 }
-                
+
                 if (bodyB.contact) {
                     bodyB.contact(contact, impulse, false)
                 }
@@ -66,7 +66,7 @@
                 // removing of CAAT canvas
                 var caatCanvas  = document.querySelectorAll('canvas')[0];
                 caatCanvas.parentNode.removeChild(caatCanvas);
-                
+
                 // adding canvas for debugging
                 // canvas creating
                 var canvas          = document.createElement('canvas');
@@ -85,7 +85,7 @@
                 this.debugDraw.SetLineThickness(1.0);
                 this.debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
                 this.world.SetDebugDraw(this.debugDraw);
-                
+
                 console.log('DEBUG MODE ENABLED');
             } else {
                 console.log('CAAT MODE ENABLED');
@@ -188,8 +188,8 @@
             };
 
             this.body.CreateFixture(this.fixtureDef);
-            
-            this.contact = function (contact, impulse, first) {                
+
+            this.contact = function (contact, impulse, first) {
                 if (first) {
                     var bodyA = contact.GetFixtureA().GetBody().GetUserData();
                     // first collision
@@ -198,17 +198,17 @@
                         //console.log('collision', bodyA, first);
                         destroyQueue.push(bodyA);
                     }
-                    
+
                 }
             };
 
             return this.body;
         }
     };
-    
+
     // destroying queue
     var destroyQueue    = Array();
-    
+
     //Physics.world.DestroyBody(walls.top);
 
     // dynamic objects
@@ -248,38 +248,38 @@
             setStrokeStyle('#333333');
 
     scene.addChild(circle);
-    
+
     var circle2     = new CAAT.ShapeActor().
             setLocation(20,20).
             setSize(18, 18).
             setFillStyle('green').
             setStrokeStyle('#333333');
-        
+
     scene.addChild(circle2);
-    
+
     var circle3     = new CAAT.ShapeActor().
             setLocation(20,20).
             setSize(18, 18).
             setFillStyle('blue').
             setStrokeStyle('#333333');
-        
+
     scene.addChild(circle3);
-    
+
     // walls of world static
     var walls       = {};
     walls.left      = Object.create(Body).init(Physics, {type:"static", x:0.5, y:0, height:50.5,  width:1, id: "left"});
     walls.right     = Object.create(Body).init(Physics, {type:"static", x:32, y:0, height:50.5,  width:1, id: "right"});
     walls.top       = Object.create(Body).init(Physics, {type:"static", x:0, y:0.5, height:1, width:65, id: "top"});
     walls.bottom    = Object.create(Body).init(Physics, {type:"static", x:0, y:24.7, height:1, width:65, id: "bottom"});
-    
+
     var bricks      = {};
     var bricks_caat = {};
-    
+
     for (var i = 1; i < 11; i += 1) {
         for (var k = 1; k < 5; k += 1) {
             var brick_id = i + '-' + k;
             bricks[brick_id]        = Object.create(Body).init(Physics, {type:"brick", x:i * 3, y: k + 1, height:1,  width:3, id: brick_id});
-            
+
             bricks_caat[brick_id]   = new CAAT.ShapeActor().
             setShape(CAAT.ShapeActor.prototype.SHAPE_RECTANGLE).
             setLocation(i * 3 * 30 - 45, (k + 1) * 30 - 15).
@@ -289,7 +289,7 @@
             scene.addChild(bricks_caat[brick_id]);
         }
     }
-    
+
     // rocket
     var rocket = {
         x: 16,
@@ -300,9 +300,11 @@
             setLocation((this.x * 30 - 5 * 30), 21 * 30).
             setSize(5 * 30, 30).
             setFillStyle('orange').
-            setStrokeStyle('#333333')
+            setStrokeStyle('#333333').
+            // add event bubbling for rocket (so you could drag rocket or a scene)
+            enableEvents(false)
     };
-    
+
     scene.addChild(rocket.actor);
 
     var moveRocket  = function(e) {
@@ -314,36 +316,36 @@
             rocket.x = e.x / 30;
         }
     };
-    
-    scene.mouseMove = moveRocket;    
+
+    scene.mouseMove = moveRocket;
     scene.mouseClick = moveRocket;
     scene.mouseDrag = moveRocket;
-    
-    
-    
+
+
+
     director.onRenderStart= function(director_time) {
         //this.world.Step(1.0/60, 1,1);
         //this.world.ClearForces();
         //console.log('111');
         // destroying of objects in destroyQueue
         for (key in destroyQueue) {
-          //console.log(destroyQueue[key]); 
+          //console.log(destroyQueue[key]);
           Physics.world.DestroyBody(destroyQueue[key].body);
           delete bricks[destroyQueue[key].details.id];
-          
+
           // CAAT actor destroying
           scene.removeChild(bricks_caat[destroyQueue[key].details.id]);
         }
-        
+
         rocket.body.SetPosition(new b2Vec2(rocket.x, 21));
         rocket.actor.setLocation(rocket.x * 30 - 2.5 * 30, 21 * 30);
-        
+
         //console.log(Object.keys(bricks).length);
-        
+
         if (Object.keys(bricks).length < 1) {
             console.log('YOU WIN!');
         };
-        
+
         // cleaning destroying queue
         destroyQueue    = Array();
         Physics.step(1/60, 1, 1);
@@ -356,7 +358,7 @@
     };
 
     director.loop(1);
-    
+
     // enabling or disabling debug mode Physics.debug(true/false);
     Physics.debug(false);
 
