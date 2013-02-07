@@ -147,6 +147,9 @@
                 case "brick":
                     this.definition.type = b2Body.b2_staticBody;
                     break;
+                case "rocket":
+                    this.definition.type = b2Body.b2_staticBody;
+                    break;
                 default:
                     this.definition.type = b2Body.b2_dynamicBody;
                     break;
@@ -174,6 +177,11 @@
                 case "polygon":
                     this.fixtureDef.shape = new b2PolygonShape();
                     this.fixtureDef.shape.SetAsArray(details.points, details.points.length);
+                    switch (details.type) {
+                        case "rocket":
+                            this.fixtureDef.filter.categoryBits = 2;
+                            break;
+                    }
                     break;
                 case "block":
                 default:
@@ -294,16 +302,29 @@
     var rocket = {
         x: 16,
         y: 21,
-        body: Object.create(Body).init(Physics, {type:"static", x:16, y:21, height:1, width:5, id: "rocket"}),
+        points: [
+            {x: -2.5, y: -0.5},
+            {x: -2, y: -0.85},
+            {x: -1, y: -1},
+            {x: 1, y: -1},
+            {x: 2, y: -0.85},
+            {x: 2.5, y: -0.5},
+            {x: 2.5, y: 0},
+            {x: -2.5, y: 0}
+        ],
+        init: function() {
+            this.body   = Object.create(Body).init(Physics, {type:"rocket", shape:"polygon", points: this.points, x:16, y:21, id: "rocket"});
+        },
         actor: new CAAT.ShapeActor().
             setShape(CAAT.ShapeActor.prototype.SHAPE_RECTANGLE).
-            setLocation((this.x * 30 - 5 * 30), 21 * 30).
+            setLocation((this.x * 30 - 5 * 30), 20.5 * 30).
             setSize(5 * 30, 30).
             setFillStyle('orange').
             setStrokeStyle('#333333').
             // add event bubbling for rocket (so you could drag rocket or a scene)
             enableEvents(false)
     };
+    rocket.init();
 
     scene.addChild(rocket.actor);
 
@@ -338,7 +359,7 @@
         }
 
         rocket.body.SetPosition(new b2Vec2(rocket.x, 21));
-        rocket.actor.setLocation(rocket.x * 30 - 2.5 * 30, 21 * 30);
+        rocket.actor.setLocation(rocket.x * 30 - 2.5 * 30, 20.5 * 30);
 
         //console.log(Object.keys(bricks).length);
 
