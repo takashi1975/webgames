@@ -315,8 +315,8 @@
         init: function() {
             this.body   = Object.create(Body).init(Physics, {type:"rocket", shape:"polygon", points: this.points, x:16, y:21, id: "rocket"});
         },
-        actor: new CAAT.ShapeActor().
-            setShape(CAAT.ShapeActor.prototype.SHAPE_RECTANGLE).
+        actor: new CAAT.Actor().
+            /*setShape(CAAT.ShapeActor.prototype.SHAPE_RECTANGLE).*/
             setLocation((this.x * 30 - 5 * 30), 20.5 * 30).
             setSize(5 * 30, 30).
             setFillStyle('orange').
@@ -379,6 +379,18 @@
     };
 
     director.loop(1);
+
+    new CAAT.ImagePreloader().loadImages(
+        [
+            {id:'rocket',    url:'img/rocket.png'}
+        ],
+        function(counter, images) {
+            director.setImagesCache(images);
+            rocket.image    = new CAAT.SpriteImage().initialize(director.getImage('rocket'), 1, 1);
+            // For sprite matrix 6x6 need to set (director.getImage('rocket'), 6, 6);
+            rocket.actor.setBackgroundImage(rocket.image.getRef(), true).setSpriteIndex(0);
+        }
+    );
 
     // enabling or disabling debug mode Physics.debug(true/false);
     Physics.debug(false);
