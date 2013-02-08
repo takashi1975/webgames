@@ -342,6 +342,32 @@
     scene.mouseClick = moveRocket;
     scene.mouseDrag = moveRocket;
 
+    function getUserAgent() {
+        if(/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            return 'ios';
+        } else if(/Android/i.test(navigator.userAgent)) {
+            return 'android';
+        } else {
+            return 'desktop';
+        }
+    }
+    
+    var platformName    = getUserAgent();
+
+    window.addEventListener("deviceorientation", function(event) {
+        // process event.alpha, event.beta and event.gamma
+        if (platformName == 'ios') {
+            rocket.x = event.beta + 15;
+        } else {
+            rocket.x = -event.gamma + 15;
+        }
+        
+        if (rocket.x < 110 / 30) {
+            rocket.x = 110 / 30;
+        } else if (rocket.x > 860 / 30) {
+            rocket.x = 860 / 30;
+        }
+    }, true);
 
 
     director.onRenderStart= function(director_time) {
