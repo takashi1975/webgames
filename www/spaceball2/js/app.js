@@ -89,6 +89,9 @@ var Physics = {
 
 // General application object
 var app = {
+    // World scale coefficient for rendering in CAAT with Box2D units
+    scale: 30,
+
     // CAAT director object defining
     director: new CAAT.Director().initialize(1024, 768),
 
@@ -169,6 +172,8 @@ var app = {
             // Create a fixture for object
             this.body.CreateFixture(this.fixtureDef);
 
+            //console.log(this.body);
+
             return this.body;
         }
     },
@@ -176,32 +181,82 @@ var app = {
     // Ball prototype
     ball: {
         // Ball constructor
-        init: function(x, y, impulseX, impulseY) {
-            var newBall = Object.create(app.Body).init(Physics, {shape:"circle", x:x, y:y});
-            newBall.ApplyImpulse({x:impulseX, y:impulseY}, newBall.GetWorldCenter());
+        init: function(caatScene, x, y, radius, impulseX, impulseY) {
+            var newBall = {},
+                caatX   = x * app.scale - radius * app.scale,
+                caatY   = y * app.scale - radius * app.scale,
+                caatWidth    = radius * app.scale * 2,
+                details = {
+                    shape: "circle",
+                    x: x,
+                    y: y,
+                    radius: radius,
+                    type: b2Body.b2_dynamicBody
+                };
+
+            // Box2D body exemplar creating
+            newBall.body = Object.create(app.Body).init(Physics, details);
+            newBall.body.ApplyImpulse({x:impulseX, y:impulseY}, newBall.body.GetWorldCenter());
+
+            // CAAT actor for ball creating
+            newBall.actor  = new CAAT.ShapeActor().
+            setLocation(caatX, caatY).
+            setSize(caatWidth, caatWidth).
+            setFillStyle('red').
+            setStrokeStyle('#333333');
+
+            // Reference for an exemplar to a updateLocation method of a prototype ball object
+            newBall.updateLocation = this.updateLocation;
+
+            // Adding of a CAAT actor to scene
+            caatScene.addChild(newBall.actor);
 
             return newBall;
+        },
+
+        // Updating of ball CAAT actor location according to Box2D body location
+        updateLocation: function() {
+            var x = (this.body.m_xf.position.x - this.body.m_userData.details.radius) * app.scale,
+                y = (this.body.m_xf.position.y - this.body.m_userData.details.radius) * app.scale;
+
+            this.actor.setLocation(x, y);
         }
     },
 
     // Balls container
     balls: {},
 
+    // Animation and simulation frame step handler
+    frameHandler: function(director_time) {
+        var balls = Object.keys(app.balls);
+        balls.forEach(function(ballId) {
+            app.balls[ballId].updateLocation();
+        });
+
+        Physics.step(1/60, 1, 1);
+    },
+
     // Application general constructor
     init: function() {
         // Box2D Physics initialization
-        Physics.init();
+        Physics.init(this.scale);
 
         // Debuggin mode setup
         Physics.debug(true);
 
+        // Adding CAAT scene for production rendering
         this.scene       = this.director.createScene();
 
-        // First ball creating
-        this.balls.first     = Object.create(this.ball).init(5, 14, -8, 4);
-        window.webkitRequestAnimationFrame(function() {
-            Physics.step(1/60, 1, 1);
-        });
+        // First Balls creating
+        this.balls.second    = Object.create(this.ball).init(this.scene, 8, 11, 2, 8, -4);
+        this.balls.first     = Object.create(this.ball).init(this.scene, 10, 14, 1, -8, 4);
+        this.balls.third     = Object.create(this.ball).init(this.scene, 11, 14, 3, -8, 4);
+
+        // Adding of handler for each frame of animation and simulation
+        this.director.onRenderStart = this.frameHandler;
+
+        // CAAT animation starting
+        this.director.loop(1);
     }
 }
 

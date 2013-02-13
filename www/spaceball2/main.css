@@ -6,19 +6,19 @@ body {
 }
 
 body.level-1 {
-    background: url('img/bg1.jpg');    
+    background: url('img/bg1.jpg');
 }
 
 body.level-2 {
-    background: url('img/bg2.jpg');    
+    background: url('img/bg2.jpg');
 }
 
 body.level-3 {
-    background: url('img/bg3.jpg');    
+    background: url('img/bg3.jpg');
 }
 
 body.level-4 {
-    background: url('img/bg4.jpg');    
+    background: url('img/bg4.jpg');
 }
 
 html, body {
@@ -49,7 +49,7 @@ html, body {
 .lives {
     top: 60px;
  }
- 
+
  .level {
     top: 100px;
  }
@@ -67,7 +67,7 @@ html, body {
 }
 
 .blast {
-    -webkit-transition: all 1s;    
+    -webkit-transition: all 1s;
     -webkit-filter: blur(10px) contrast(5.6) brightness(0.3) opacity(0);
     border-radius: 0;
     box-shadow: none;
@@ -87,4 +87,10 @@ html, body {
     text-align: center;
     color: #fff;
     font: bold 80px/500px Arial;
+}
+
+.debug {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
