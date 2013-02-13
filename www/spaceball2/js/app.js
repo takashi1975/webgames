@@ -16,6 +16,9 @@ app.init = function() {
     this.balls.second    = Object.create(this.ball).init(this.scene, 8, 11, 2, 8, -4);
     this.balls.first     = Object.create(this.ball).init(this.scene, 10, 14, 1, -8, 4);
     this.balls.third     = Object.create(this.ball).init(this.scene, 11, 14, 3, -8, 4);
+    
+    // Bricks creating
+    this.bricks.first    = Object.create(this.brick).init(this.scene, 11, 14);
 
     // Adding of handler for each frame of animation and simulation
     this.director.onRenderStart = this.frameHandler;

@@ -6,5 +6,6 @@ app.frameHandler = function(director_time) {
         app.balls[ballId].update();
     });
 
+    // Next physics step handling
     app.Physics.step(1/60, 1, 1);
 };
