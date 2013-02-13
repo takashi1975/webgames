@@ -4,5 +4,8 @@ var app = {
     scale: 30,
     
     // Dimensions of canvas element
-    canvas: {w: 1024, h: 768}
+    canvas: {w: 1024, h: 768},
+    
+    // Debug mode rendering
+    debug: true
 }

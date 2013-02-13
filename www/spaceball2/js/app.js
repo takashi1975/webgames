@@ -4,7 +4,7 @@ app.init = function() {
     Physics.init(this.scale);
 
     // Debuggin mode setup
-    Physics.debug(true);
+    Physics.debug(this.debug);
 
     // CAAT director object defining
     this.director   = new CAAT.Director().initialize(this.canvas.w, this.canvas.h);
