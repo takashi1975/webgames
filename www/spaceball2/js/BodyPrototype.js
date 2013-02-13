@@ -27,15 +27,15 @@ app.Body = {
         this.details = details = details || {};
 
         // Create the definition
-        this.definition = new b2BodyDef();
+        this.definition = new app.b2BodyDef();
 
         // Set up the definition
         for (var k in this.definitionDefaults) {
             this.definition[k] = details[k] || this.definitionDefaults[k];
         }
 
-        this.definition.position = new b2Vec2(details.x || 0, details.y || 0);
-        this.definition.linearVelocity = new b2Vec2(details.vx || 0, details.vy || 0);
+        this.definition.position = new app.b2Vec2(details.x || 0, details.y || 0);
+        this.definition.linearVelocity = new app.b2Vec2(details.vx || 0, details.vy || 0);
         this.definition.userData = this;
         this.definition.type = details.type;
 
@@ -43,7 +43,7 @@ app.Body = {
         this.body = physics.world.CreateBody(this.definition);
 
         // Create the fixture
-        this.fixtureDef = new b2FixtureDef();
+        this.fixtureDef = new app.b2FixtureDef();
         for (var l in this.fixtureDefaults) {
             this.fixtureDef[l] = details[l] || this.fixtureDefaults[l];
         }
@@ -54,10 +54,10 @@ app.Body = {
         switch (details.shape) {
             case "circle":
                 details.radius = details.radius || this.defaults.radius;
-                this.fixtureDef.shape = new b2CircleShape(details.radius);
+                this.fixtureDef.shape = new app.b2CircleShape(details.radius);
                 break;
             case "polygon":
-                this.fixtureDef.shape = new b2PolygonShape();
+                this.fixtureDef.shape = new app.b2PolygonShape();
                 this.fixtureDef.shape.SetAsArray(details.points, details.points.length);
                 break;
             case "block":
@@ -65,7 +65,7 @@ app.Body = {
                 details.width = details.width || this.defaults.width;
                 details.height = details.height || this.defaults.height;
 
-                this.fixtureDef.shape = new b2PolygonShape();
+                this.fixtureDef.shape = new app.b2PolygonShape();
                 this.fixtureDef.shape.SetAsBox(details.width / 2,
                     details.height / 2);
                 this.fixtureDef.filter.categoryBits = 2;

@@ -1,10 +1,10 @@
 // Application general constructor
 app.init = function() {
     // Box2D Physics initialization
-    Physics.init(this.scale);
+    this.Physics.init(this.scale);
 
     // Debuggin mode setup
-    Physics.debug(this.debug);
+    this.Physics.debug(this.debug);
 
     // CAAT director object defining
     this.director   = new CAAT.Director().initialize(this.canvas.w, this.canvas.h);

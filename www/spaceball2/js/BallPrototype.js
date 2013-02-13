@@ -13,11 +13,11 @@ app.ball = {
                 x: x,
                 y: y,
                 radius: radius,
-                type: b2Body.b2_dynamicBody
+                type: app.b2Body.b2_dynamicBody
             };
 
         // Box2D body exemplar creating
-        this.body = Object.create(app.Body).init(Physics, details);
+        this.body = Object.create(app.Body).init(app.Physics, details);
         this.body.ApplyImpulse({x:impulseX, y:impulseY}, this.body.GetWorldCenter());
 
         // CAAT actor for ball creating
