@@ -195,6 +195,8 @@ var app = {
         // Debuggin mode setup
         Physics.debug(true);
 
+        this.scene       = this.director.createScene();
+
         // First ball creating
         this.balls.first     = Object.create(this.ball).init(5, 14, -8, 4);
         window.webkitRequestAnimationFrame(function() {
