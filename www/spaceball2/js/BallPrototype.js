@@ -4,21 +4,21 @@ app.balls = {};
 // Ball prototype
 app.ball = {
     // Ball constructor
-    init: function(caatScene, x, y, radius, impulseX, impulseY) {
-        var caatX   = x * app.scale - radius * app.scale,
-            caatY   = y * app.scale - radius * app.scale,
-            caatWidth    = radius * app.scale * 2,
+    init: function(data) {
+        var caatX   = data.x * app.scale - data.radius * app.scale,
+            caatY   = data.y * app.scale - data.radius * app.scale,
+            caatWidth    = data.radius * app.scale * 2,
             details = {
                 shape: "circle",
-                x: x,
-                y: y,
-                radius: radius,
-                type: app.b2Body.b2_dynamicBody
+                x: data.x,
+                y: data.y,
+                radius: data.radius,
+                type: 'dynamic'
             };
 
         // Box2D body exemplar creating
         this.body = Object.create(app.Body).init(app.Physics, details);
-        this.body.ApplyImpulse({x:impulseX, y:impulseY}, this.body.GetWorldCenter());
+        this.push(data.impulseX, data.impulseY);
 
         // CAAT actor for ball creating
         this.actor  = new CAAT.ShapeActor().
@@ -28,7 +28,7 @@ app.ball = {
         setStrokeStyle('#333333');
 
         // Adding of a CAAT actor to scene
-        caatScene.addChild(this.actor);
+        app.scene.addChild(this.actor);
 
         return this;
     },
@@ -39,5 +39,15 @@ app.ball = {
             y = (this.body.m_xf.position.y - this.body.m_userData.details.radius) * app.scale;
 
         this.actor.setLocation(x, y);
+    },
+
+    // Stops ball flying
+    stop: function() {
+        this.body.SetLinearVelocity(new app.b2Vec2(0,0));
+    },
+
+    // Adding an impulse to a ball with specific vector
+    push: function(impulseX, impulseY) {
+        this.body.ApplyImpulse({x:impulseX, y:impulseY}, this.body.GetWorldCenter());
     }
 };

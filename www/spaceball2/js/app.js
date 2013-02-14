@@ -13,12 +13,12 @@ app.init = function() {
     this.scene       = this.director.createScene();
 
     // First Balls creating
-    this.balls.second    = Object.create(this.ball).init(this.scene, 8, 11, 2, 8, -4);
-    this.balls.first     = Object.create(this.ball).init(this.scene, 10, 14, 1, -8, 4);
-    this.balls.third     = Object.create(this.ball).init(this.scene, 11, 14, 3, -8, 4);
-    
+    this.balls.second    = Object.create(this.ball).init({x:16, y:11, radius:2, impulseX:8, impulseY:-4});
+    this.balls.first     = Object.create(this.ball).init({x:18, y:14, radius:1, impulseX:-8, impulseY:4});
+    this.balls.third     = Object.create(this.ball).init({x:22, y:14, radius:3, impulseX:-8, impulseY:4});
+
     // Bricks creating
-    this.bricks.first    = Object.create(this.brick).init(this.scene, 11, 14);
+    this.createLevel(1);
 
     // Adding of handler for each frame of animation and simulation
     this.director.onRenderStart = this.frameHandler;
@@ -26,6 +26,17 @@ app.init = function() {
     // CAAT animation starting
     this.director.loop(1);
 };
+
+// Level generator
+app.createLevel = function(level) {
+    var self    = this,
+        level   = 'level_' + level;
+        bricks  = Object.keys(app[level]);
+    bricks.forEach(function(brickId) {
+        var brick   = app[level][brickId];
+        this.bricks[brickId]    = Object.create(self.brick).init(brick);
+    });
+}
 
 // Application start
 app.init();

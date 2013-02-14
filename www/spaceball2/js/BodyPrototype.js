@@ -37,7 +37,17 @@ app.Body = {
         this.definition.position = new app.b2Vec2(details.x || 0, details.y || 0);
         this.definition.linearVelocity = new app.b2Vec2(details.vx || 0, details.vy || 0);
         this.definition.userData = this;
-        this.definition.type = details.type;
+
+        // Set up of body type
+        switch (details.type) {
+            case "static":
+                this.definition.type    = app.b2Body.b2_staticBody;
+                break;
+            case "dynamic":
+            default:
+                this.definition.type    = app.b2Body.b2_dynamicBody;
+                break;
+        }
 
         // Create the Body
         this.body = physics.world.CreateBody(this.definition);
@@ -74,8 +84,6 @@ app.Body = {
 
         // Create a fixture for object
         this.body.CreateFixture(this.fixtureDef);
-
-        //console.log(this.body);
 
         return this.body;
     }
