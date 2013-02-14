@@ -17,6 +17,9 @@ app.init = function() {
     this.balls.first     = Object.create(this.ball).init({x:18, y:14, radius:1, impulseX:-8, impulseY:4});
     this.balls.third     = Object.create(this.ball).init({x:22, y:14, radius:3, impulseX:-8, impulseY:4});
 
+    // Rocket creating
+    this.rocket          = Object.create(this.rocketPrototype).init({x:16, y:22});
+
     // Bricks creating
     this.createLevel(1);
 
@@ -32,6 +35,7 @@ app.createLevel = function(level) {
     var self    = this,
         level   = 'level_' + level;
         bricks  = Object.keys(app[level]);
+
     bricks.forEach(function(brickId) {
         var brick   = app[level][brickId];
         this.bricks[brickId]    = Object.create(self.brick).init(brick);
