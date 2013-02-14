@@ -13,9 +13,7 @@ app.init = function() {
     this.scene       = this.director.createScene();
 
     // First Balls creating
-    this.balls.second    = Object.create(this.ball).init({x:16, y:11, radius:2, impulseX:8, impulseY:-4});
-    this.balls.first     = Object.create(this.ball).init({x:18, y:14, radius:1, impulseX:-8, impulseY:4});
-    this.balls.third     = Object.create(this.ball).init({x:22, y:14, radius:3, impulseX:-8, impulseY:4});
+    this.balls.first     = Object.create(this.ball).init({x:18, y:14, radius:0.5, impulseX:-8, impulseY:10});
 
     // Rocket creating
     this.rocket          = Object.create(this.rocketPrototype).init({x:16, y:22});

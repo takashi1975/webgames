@@ -25,7 +25,8 @@ app.ball = {
         setLocation(caatX, caatY).
         setSize(caatWidth, caatWidth).
         setFillStyle('red').
-        setStrokeStyle('#333333');
+        setStrokeStyle('#333333').
+        enableEvents(false);
 
         // Adding of a CAAT actor to scene
         app.scene.addChild(this.actor);

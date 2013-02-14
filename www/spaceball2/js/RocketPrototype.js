@@ -26,7 +26,9 @@ app.rocketPrototype = {
         setLocation(caatX, caatY).
         setSize(caatWidth, caatHeight).
         setFillStyle('red').
-        setStrokeStyle('#333333');
+        setStrokeStyle('#333333').
+        // Add event bubbling for rocket (so you could drag rocket or a scene)
+        enableEvents(false);
 
         // Adding of a CAAT actor to scene
         app.scene.addChild(this.actor);

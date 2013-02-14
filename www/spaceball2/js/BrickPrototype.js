@@ -29,7 +29,8 @@ app.brick = {
         setLocation(caatX, caatY).
         setSize(caatWidth, caatHeight).
         setFillStyle(data.color).
-        setStrokeStyle('#333333');
+        setStrokeStyle('#333333').
+        enableEvents(false);
 
         // Adding of a CAAT actor to scene
         app.scene.addChild(this.actor);
