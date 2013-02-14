@@ -9,5 +9,20 @@ app.level_1 = {
     '2-2': {color: "blue", x: 2, y: 2},
     '2-3': {color: "green", x: 2, y: 3},
     '2-4': {color: "yellow", x: 2, y: 4},
-    '2-5': {color: "orange", x: 2, y: 5}
+    '2-5': {color: "orange", x: 2, y: 5},
+    '3-1': {color: "red", x: 3, y: 1},
+    '3-2': {color: "blue", x: 3, y: 2},
+    '3-3': {color: "green", x: 3, y: 3},
+    '3-4': {color: "yellow", x: 3, y: 4},
+    '3-5': {color: "orange", x: 3, y: 5},
+    '4-1': {color: "red", x: 4, y: 1},
+    '4-2': {color: "blue", x: 4, y: 2},
+    '4-3': {color: "green", x: 4, y: 3},
+    '4-4': {color: "yellow", x: 4, y: 4},
+    '4-5': {color: "orange", x: 4, y: 5},
+    '5-1': {color: "red", x: 5, y: 1},
+    '5-2': {color: "blue", x: 5, y: 2},
+    '5-3': {color: "green", x: 5, y: 3},
+    '5-4': {color: "yellow", x: 5, y: 4},
+    '5-5': {color: "orange", x: 5, y: 5}
 };
