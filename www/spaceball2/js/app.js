@@ -48,7 +48,7 @@ app.createLevel = function(level) {
     this.balls.first     = Object.create(this.ball).init({x:18, y:14, radius:0.35, impulseX:-5, impulseY:5});
 
     // Rocket creating
-    this.rocket          = Object.create(this.rocketPrototype).init({x:16, y:22});
+    this.rocket          = Object.create(this.rocketPrototype).init({x:16, y:(app.canvas.h - 120)/30});
 }
 
 // Loading recources

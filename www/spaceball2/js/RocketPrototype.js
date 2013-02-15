@@ -51,6 +51,6 @@ app.rocketPrototype = {
 
     // Moving rocket handler
     move: function(e) {
-        app.rocket.body.SetPosition(new app.b2Vec2(e.x / app.scale, 21));
+        app.rocket.body.SetPosition(new app.b2Vec2(e.x / app.scale, app.rocket.body.m_xf.position.y));
     }
 };
