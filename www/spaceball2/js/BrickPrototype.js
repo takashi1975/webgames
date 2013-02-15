@@ -5,16 +5,16 @@ app.bricks = {};
 app.brick = {
     // Brick constructor
     init: function(data) {
-        var width   = 2,
-            height  = 1,
-            caatX   = (width * data.x - width / 2) * app.scale,
-            caatY   = (height * data.y - height / 2) * app.scale,
+        var width   = 2.1,
+            height  = 1.1,
+            caatX   = (width * data.x + 0.5 - width / 2) * app.scale,
+            caatY   = (height * data.y + 1 - height / 2) * app.scale,
             caatWidth    = width * app.scale,
             caatHeight   = height * app.scale,
             details = {
                 shape: "block",
-                x: data.x * width,
-                y: data.y * height,
+                x: data.x * width + 0.5,
+                y: data.y * height + 1,
                 width: width,
                 height: height,
                 type: 'static'
@@ -24,13 +24,13 @@ app.brick = {
         this.body = Object.create(app.Body).init(app.Physics, details);
 
         // CAAT actor for brick creating
-        this.actor  = new CAAT.ShapeActor().
-        setShape(CAAT.ShapeActor.prototype.SHAPE_RECTANGLE).
+        this.actor  = new CAAT.Actor().
         setLocation(caatX, caatY).
-        setSize(caatWidth, caatHeight).
-        setFillStyle(data.color).
-        setStrokeStyle('#333333').
         enableEvents(false);
+    
+        // Setting of a cached image to the brick
+        this.image    = new CAAT.SpriteImage().initialize(app.director.getImage('redBrick'), 1, 1);
+        this.actor.setBackgroundImage(this.image.getRef(), true).setSpriteIndex(0);
 
         // Adding of a CAAT actor to scene
         app.scene.addChild(this.actor);

@@ -24,5 +24,16 @@ app.level_1 = {
     '5-2': {color: "blue", x: 5, y: 2},
     '5-3': {color: "green", x: 5, y: 3},
     '5-4': {color: "yellow", x: 5, y: 4},
-    '5-5': {color: "orange", x: 5, y: 5}
+    '5-5': {color: "orange", x: 5, y: 5},
+    '6-1': {color: "red", x: 6, y: 1},
+    '6-2': {color: "blue", x: 6, y: 2},
+    '6-3': {color: "green", x: 6, y: 3},
+    '6-4': {color: "yellow", x: 6, y: 4},
+    '6-5': {color: "orange", x: 6, y: 5},
+    '7-1': {color: "red", x: 7, y: 1},
+    '7-2': {color: "blue", x: 7, y: 2},
+    '7-3': {color: "green", x: 7, y: 3},
+    '7-4': {color: "yellow", x: 7, y: 4},
+    '7-5': {color: "orange", x: 7, y: 5}
+    
 };

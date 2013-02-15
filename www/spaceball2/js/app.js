@@ -11,19 +11,10 @@ app.init = function() {
 
     // Adding CAAT scene for production rendering
     this.scene       = this.director.createScene();
-
-    // First Balls creating
-    this.balls.first     = Object.create(this.ball).init({x:18, y:14, radius:0.5, impulseX:-8, impulseY:10});
-
-    // Rocket creating
-    this.rocket          = Object.create(this.rocketPrototype).init({x:16, y:22});
-
-    // Bricks creating
-    this.createLevel(1);
-
-    // Adding of handler for each frame of animation and simulation
-    this.director.onRenderStart = this.frameHandler;
-
+    
+    // Load recources
+    this.loadRecources();
+    
     // CAAT animation starting
     this.director.loop(1);
 };
@@ -38,6 +29,40 @@ app.createLevel = function(level) {
         var brick   = app[level][brickId];
         this.bricks[brickId]    = Object.create(self.brick).init(brick);
     });
+    
+    // Creating of a game interface
+    app.gameInterface.init();
+    
+    // First Balls creating
+    this.balls.first     = Object.create(this.ball).init({x:18, y:14, radius:0.4, impulseX:-8, impulseY:10});
+
+    // Rocket creating
+    this.rocket          = Object.create(this.rocketPrototype).init({x:16, y:22});
+}
+
+// Loading recources
+app.loadRecources = function() {
+    new CAAT.ImagePreloader().loadImages(
+        [
+            {id:'rocket',       url:'img/paddleRed.png'},
+            {id:'redBrick',     url:'img/redBrick.png'}
+        ],
+        function(counter, images) {
+            console.log('Loading of ' + counter);
+            if (counter == images.length) {
+                // Caching of loaded images in director object
+                app.director.setImagesCache(images);
+                
+                // Level creating
+                app.createLevel(1);
+                
+                // Adding of handler for each frame of animation and simulation
+                app.director.onRenderStart = app.frameHandler;
+            }
+            //rocket.image    = new CAAT.SpriteImage().initialize(director.getImage('rocket'), 1, 1);
+            //rocket.actor.setBackgroundImage(rocket.image.getRef(), true).setSpriteIndex(0);
+        }
+    );    
 }
 
 // Application start

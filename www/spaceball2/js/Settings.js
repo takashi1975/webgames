@@ -7,5 +7,5 @@ var app = {
     canvas: {w: 1024, h: 768},
 
     // Debug mode rendering
-    debug: true
+    debug: false
 }

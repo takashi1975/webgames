@@ -24,7 +24,7 @@ app.ball = {
         this.actor  = new CAAT.ShapeActor().
         setLocation(caatX, caatY).
         setSize(caatWidth, caatWidth).
-        setFillStyle('red').
+        setFillStyle('white').
         setStrokeStyle('#333333').
         enableEvents(false);
 
