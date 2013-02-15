@@ -21,12 +21,13 @@ app.ball = {
         this.push(data.impulseX, data.impulseY);
 
         // CAAT actor for ball creating
-        this.actor  = new CAAT.ShapeActor().
+        this.actor  = new CAAT.Actor().
         setLocation(caatX, caatY).
-        setSize(caatWidth, caatWidth).
-        setFillStyle('white').
-        setStrokeStyle('#333333').
         enableEvents(false);
+    
+        // Setting of a cached image to the brick
+        this.image    = app.director.getImage('ballGrey');
+        this.actor.setBackgroundImage(this.image, true);
 
         // Adding of a CAAT actor to scene
         app.scene.addChild(this.actor);

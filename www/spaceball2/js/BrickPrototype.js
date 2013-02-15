@@ -6,7 +6,7 @@ app.brick = {
     // Brick constructor
     init: function(data) {
         var width   = 2.1,
-            height  = 1.1,
+            height  = 1.05,
             caatX   = (width * data.x + 0.5 - width / 2) * app.scale,
             caatY   = (height * data.y + 1 - height / 2) * app.scale,
             caatWidth    = width * app.scale,
@@ -29,8 +29,8 @@ app.brick = {
         enableEvents(false);
     
         // Setting of a cached image to the brick
-        this.image    = new CAAT.SpriteImage().initialize(app.director.getImage('redBrick'), 1, 1);
-        this.actor.setBackgroundImage(this.image.getRef(), true).setSpriteIndex(0);
+        this.image    = app.director.getImage('redBrick');
+        this.actor.setBackgroundImage(this.image, true);
 
         // Adding of a CAAT actor to scene
         app.scene.addChild(this.actor);

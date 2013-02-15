@@ -12,6 +12,13 @@ app.init = function() {
     // Adding CAAT scene for production rendering
     this.scene       = this.director.createScene();
     
+    // Adding of a background CAAT actor
+    this.background  = new CAAT.Actor().
+    setLocation(0, 0).
+    // Add event bubbling for rocket (so you could drag rocket or a scene)
+    enableEvents(false);
+    this.scene.addChild(this.background);
+    
     // Load recources
     this.loadRecources();
     
@@ -25,6 +32,10 @@ app.createLevel = function(level) {
         level   = 'level_' + level;
         bricks  = Object.keys(app[level]);
 
+    // Level background setting
+    this.background.setBackgroundImage(app.director.getImage(level), true);
+    
+    // Bricks field generating
     bricks.forEach(function(brickId) {
         var brick   = app[level][brickId];
         this.bricks[brickId]    = Object.create(self.brick).init(brick);
@@ -34,7 +45,7 @@ app.createLevel = function(level) {
     app.gameInterface.init();
     
     // First Balls creating
-    this.balls.first     = Object.create(this.ball).init({x:18, y:14, radius:0.4, impulseX:-8, impulseY:10});
+    this.balls.first     = Object.create(this.ball).init({x:18, y:14, radius:0.35, impulseX:-5, impulseY:5});
 
     // Rocket creating
     this.rocket          = Object.create(this.rocketPrototype).init({x:16, y:22});
@@ -45,7 +56,9 @@ app.loadRecources = function() {
     new CAAT.ImagePreloader().loadImages(
         [
             {id:'rocket',       url:'img/paddleRed.png'},
-            {id:'redBrick',     url:'img/redBrick.png'}
+            {id:'redBrick',     url:'img/redBrick.png'},
+            {id:'level_1',      url:'img/levels/forest_1.jpg'},
+            {id:'ballGrey',     url:'img/ballGrey.png'}
         ],
         function(counter, images) {
             console.log('Loading of ' + counter);
