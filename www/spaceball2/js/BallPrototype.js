@@ -13,7 +13,9 @@ app.ball = {
                 x: data.x,
                 y: data.y,
                 radius: data.radius,
-                type: 'dynamic'
+                bodyType: "dynamic",
+                type: "ball",
+                id: data.id
             };
 
         // Box2D body exemplar creating
@@ -31,6 +33,10 @@ app.ball = {
 
         // Adding of a CAAT actor to scene
         app.scene.addChild(this.actor);
+        
+        // Set references to collision methods for body user data
+        this.body.m_userData.contact            = this.contact;
+        this.body.m_userData.collisionHandlers  = this.collisionHandlers;
 
         return this;
     },
@@ -51,5 +57,42 @@ app.ball = {
     // Adding an impulse to a ball with specific vector
     push: function(impulseX, impulseY) {
         this.body.ApplyImpulse({x:impulseX, y:impulseY}, this.body.GetWorldCenter());
+    },
+    
+    // Collision handlers
+    collisionHandlers: {
+        // For brick
+        brick: function(brick, impulse) {
+            // Destroy a brick
+            app.stepActionsQueue.push({object: app.bricks[brick.details.id], method: 'destroy'});
+        }
+    },
+
+    // Collision handling (context this is a prototype so we could use a
+    // user data stored references to a ball object methods)
+    contact: function (contact, impulse, first) {
+        // Get user data of collided with ball body
+        var bodyA = contact.GetFixtureA().GetBody().GetUserData();
+
+        // Get type of collided object
+        var collidedObjectType  = bodyA.details.type;
+
+        // Check if there is such collision handler for a ball in reference collisionHandlers
+        if(this.collisionHandlers[collidedObjectType]) {
+            // Call collision handler
+            this.collisionHandlers[collidedObjectType](bodyA, impulse);
+        }
     }
+    
+    // Ball collision handler
+    //collisionHandler: function(contact, impulse) {
+        // Get body which has been collided with this body
+        //var bodyA = contact.GetFixtureA().GetBody().GetUserData();
+            //if (bodyA.details.type == 'brick') {
+                //console.log('collision', bodyA, first);
+                //destroyQueue.push(bodyA);
+            //}
+//            console.log('ball');
+    //}
+
 };

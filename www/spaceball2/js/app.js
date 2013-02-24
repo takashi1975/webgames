@@ -38,17 +38,31 @@ app.createLevel = function(level) {
     // Bricks field generating
     bricks.forEach(function(brickId) {
         var brick   = app[level][brickId];
-        this.bricks[brickId]    = Object.create(self.brick).init(brick);
+        brick.id    = brickId;
+        self.bricks[brickId]    = Object.create(self.brick).init(brick);
     });
     
     // Creating of a game interface
     app.gameInterface.init();
     
     // First Balls creating
-    this.balls.first     = Object.create(this.ball).init({x:18, y:14, radius:0.35, impulseX:-5, impulseY:5});
+    this.balls.first     = Object
+                                .create(this.ball)
+                                .init({ x: 18,
+                                        y: 14,
+                                        radius: 0.35,
+                                        impulseX: -5,
+                                        impulseY: 5,
+                                        id: "first"
+                                    });
 
     // Rocket creating
-    this.rocket          = Object.create(this.rocketPrototype).init({x:16, y:(app.canvas.h - 120)/30});
+    this.rocket          = Object
+                                .create(this.rocketPrototype)
+                                .init({ x: 16,
+                                        y: (app.canvas.h - 120) / 30,
+                                        id: "rocket"
+                                    });
 }
 
 // Loading recources

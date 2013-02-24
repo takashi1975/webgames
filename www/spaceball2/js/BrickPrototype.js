@@ -17,8 +17,12 @@ app.brick = {
                 y: data.y * height + 1,
                 width: width,
                 height: height,
-                type: 'static'
+                bodyType: "static",
+                type: "brick",
+                id: data.id
             };
+        // Set id of this object
+        this.id     = data.id;
 
         // Box2D body exemplar creating
         this.body = Object.create(app.Body).init(app.Physics, details);
@@ -36,5 +40,18 @@ app.brick = {
         app.scene.addChild(this.actor);
 
         return this;
+    },
+    
+    // Destructor
+    destroy: function() {
+        // Destroying of a Box2d body
+        app.Physics.world.DestroyBody(this.body);
+        
+        // Destroying of an Actor
+        app.scene.removeChild(this.actor);
+         
+        // Destroying of this object
+        delete app.bricks[this.id];
+        delete this;        
     }
 };

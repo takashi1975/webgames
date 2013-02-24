@@ -14,7 +14,9 @@ app.rocketPrototype = {
                 y: data.y,
                 width: width,
                 height: height,
-                type: 'static'
+                bodyType: "static",
+                type: "rocket",
+                id: data.id
             };
 
         // Box2D body exemplar creating

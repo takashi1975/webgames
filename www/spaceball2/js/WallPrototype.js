@@ -17,7 +17,9 @@ app.wall = {
                 y: data.y * height,
                 width: width,
                 height: height,
-                type: 'static'
+                bodyType: "static",
+                type: "wall",
+                id: data.id
             };
 
         // Box2D body exemplar creating

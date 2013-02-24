@@ -39,7 +39,7 @@ app.Body = {
         this.definition.userData = this;
 
         // Set up of body type
-        switch (details.type) {
+        switch (details.bodyType) {
             case "static":
                 this.definition.type    = app.b2Body.b2_staticBody;
                 break;
@@ -84,7 +84,7 @@ app.Body = {
 
         // Create a fixture for object
         this.body.CreateFixture(this.fixtureDef);
-
+        
         return this.body;
     }
 };

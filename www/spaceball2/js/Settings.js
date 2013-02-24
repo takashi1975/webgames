@@ -7,5 +7,8 @@ var app = {
     canvas: {w: window.innerWidth, h: window.innerHeight},
 
     // Debug mode rendering
-    debug: false
+    debug: false,
+    
+    // Container for actions queue that need to be processed every step
+    stepActionsQueue: []
 }
