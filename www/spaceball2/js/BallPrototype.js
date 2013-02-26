@@ -83,16 +83,4 @@ app.ball = {
             this.collisionHandlers[collidedObjectType](bodyA, impulse);
         }
     }
-    
-    // Ball collision handler
-    //collisionHandler: function(contact, impulse) {
-        // Get body which has been collided with this body
-        //var bodyA = contact.GetFixtureA().GetBody().GetUserData();
-            //if (bodyA.details.type == 'brick') {
-                //console.log('collision', bodyA, first);
-                //destroyQueue.push(bodyA);
-            //}
-//            console.log('ball');
-    //}
-
 };
