@@ -10,5 +10,15 @@ var app = {
     debug: false,
     
     // Container for actions queue that need to be processed every step
-    stepActionsQueue: []
+    stepActionsQueue: [],
+    
+    // Helping convertor functions from degrees to radians
+    rad: function(degrees) {
+        return degrees * (Math.PI / 180);
+    },
+    
+    // Helping convertor functions from degrees to radians
+    deg: function(radians) {
+        return radians * (180 / Math.PI);
+    }
 }

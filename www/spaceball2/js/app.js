@@ -45,17 +45,6 @@ app.createLevel = function(level) {
     // Creating of a game interface
     app.gameInterface.init();
     
-    // First Balls creating
-    this.balls.first     = Object
-                                .create(this.ball)
-                                .init({ x: 18,
-                                        y: 14,
-                                        radius: 0.35,
-                                        impulseX: -5,
-                                        impulseY: 5,
-                                        id: "first"
-                                    });
-
     // Rocket creating
     this.rocket          = Object
                                 .create(this.rocketPrototype)
@@ -63,6 +52,17 @@ app.createLevel = function(level) {
                                         y: (app.canvas.h - 120) / 30,
                                         id: "rocket"
                                     });
+                                    
+    // First Balls creating
+    this.balls.first     = Object
+                                .create(this.ball)
+                                .init({ x: this.rocket.body.m_xf.position.x,
+                                        y: this.rocket.body.m_xf.position.y - 0.9,
+                                        radius: 0.35,
+                                        angle: 45,
+                                        speed: 8,
+                                        id: "first"
+                                    }).timeOutBeforePush();
 }
 
 // Loading recources
@@ -71,7 +71,7 @@ app.loadRecources = function() {
         [
             {id:'rocket',       url:'img/paddleRed.png'},
             {id:'redBrick',     url:'img/redBrick.png'},
-            {id:'level_1',      url:'img/levels/forest_1.jpg'},
+            {id:'level_1',      url:'img/levels/metallic_1.jpg'},
             {id:'ballGrey',     url:'img/ballGrey.png'}
         ],
         function(counter, images) {
