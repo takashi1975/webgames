@@ -37,8 +37,11 @@ app.applyObjType = function() {
         var title = $(this).attr('id') + ": " + app.selectedObjType.name;
         $(this).attr('title', title);
 
-        // Modyfiyng a level block in app level data object 
-        app.level.data[$(this).attr('id')] = app.selectedObjType;
+        // Modyfiyng a level block in app level data object
+        app.level.data[$(this).attr('id')]          = {};
+        app.level.data[$(this).attr('id')].objType  = app.selectedObjType.name;
+        app.level.data[$(this).attr('id')].x        = $(this).attr('data-x');
+        app.level.data[$(this).attr('id')].y        = $(this).attr('data-y');
     } else {
         alert('Please select an object type!');
     }
@@ -88,7 +91,9 @@ app.generateLevel = function() {
             $('<div/>', {
                 id: i + '-' + k,
                 style: 'left:' + i * 25 + 'px; top:' + k * 25 + 'px;',
-                class: 'levelBlock',
+                'class': 'levelBlock',
+                'data-x': i,
+                'data-y': k,
                 title: i + '-' + k + 'empty'
             }).appendTo(level).click(app.applyObjType);
             
@@ -103,7 +108,7 @@ app.generateLevel = function() {
 
 // Exporting a level
 app.exportLevel = function() {
-    $('.levelCode').text(JSON.stringify(app.level)).show();    
+    $('.levelCode').text("objectTypes = " + JSON.stringify(app.objectTypes) + "; level = " + JSON.stringify(app.level)).show();
 };
 
 // App initializator
