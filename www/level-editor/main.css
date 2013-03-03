@@ -1,0 +1,56 @@
+* {
+    font: 400 14px/17px arial;
+}
+
+.level {
+    position: relative;
+    width: 1000px;
+    height: 500px;
+    overflow: auto;
+}
+
+.levelBlock {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background: lightgrey;
+    border: 1px solid darkslategrey;
+    cursor: pointer;
+}
+
+.levelBlock:hover {
+    background: grey;
+}
+
+.objectType {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid gray;
+    margin-bottom: 10px;
+}
+
+.form {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 250px;
+}
+
+.form label {
+    font: 400 11px/14px tahoma;
+    color: gray;
+}
+
+.selectedObjType div {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid gray;
+    display: inline-block;
+}
+
+.tools {
+    float: right;
+}

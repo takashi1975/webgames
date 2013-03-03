@@ -1,0 +1,1 @@
+java -jar physics-body-editor.jar

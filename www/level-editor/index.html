@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>spaceball</title>
+        <meta charset="UTF-8" />
+
+        <!-- Styles -->
+        <link rel="stylesheet" href="main.css" />
+
+        <!-- Scripts -->
+        <script src="js/jquery-1.9.1.min.js" defer></script>
+        <script src="js/app.js" defer></script>
+    </head>
+    <body>
+        <div class="tools">
+            <form class="form">
+                <label>
+                    Level title:<br/>
+                    <input type="text" name="levelTitle" class="levelTitle"/>
+                </label><br/>
+
+                <label>
+                    Level X size:<br/>
+                    <input type="text" name="levelX" class="levelX"/>
+                </label><br/>
+
+                <label>
+                    Level Y size:<br/>
+                    <input type="text" name="levelY" class="levelY"/>
+                </label><br/>
+
+                <input type="button" class="generateLevel" value="Generate level"><br/>
+            </form>
+
+            <form class="objectForm form">
+                <b>Creating a new object type</b><br/>
+                <label>
+                    Name:<br/>
+                    <input type="text" name="name" class="name"/>
+                </label><br/>
+                <label>
+                    Type:<br/>
+                    <input type="text" name="type" class="type attr"/>
+                </label><br/>
+                <label>
+                    Img:<br/>
+                    <input type="text" name="img" class="img attr"/>
+                </label><br/>
+                <label>
+                    Color:<br/>
+                    <input type="text" name="color" class="color attr"/>
+                </label><br/>
+
+                <input type="button" class="objTypeAddAttribute" value="Add a new attribute to the object"><br/>
+                <input type="button" class="objTypeCreate" value="Create an object type"><br/>
+            </form>
+
+            <div class="objTypes form">
+                No object types yet
+            </div>
+        </div>
+        
+        <div class="form">
+            Selected object type
+            <div class="selectedObjType">
+                No object type selected
+            </div>
+            Level options
+            <input type="button" value="Export a level" class="exportLevel"/>
+            <textarea class="levelCode" style="display: none;"></textarea>
+        </div>
+        
+        <div class="level">
+            No level yet
+        </div>
+        
+        
+    </body>
+</html>
