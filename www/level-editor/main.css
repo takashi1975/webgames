@@ -43,6 +43,10 @@
     color: gray;
 }
 
+.form.selector {
+    width: 1000px;
+}
+
 .selectedObjType div {
     padding: 10px;
     cursor: pointer;

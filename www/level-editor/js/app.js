@@ -108,7 +108,20 @@ app.generateLevel = function() {
 
 // Exporting a level
 app.exportLevel = function() {
-    $('.levelCode').text("objectTypes = " + JSON.stringify(app.objectTypes) + "; level = " + JSON.stringify(app.level)).show();
+    // Hide import level elements
+    $('.importLevelCode, .importSubmit').hide();
+    
+    // Show export level textarea and prepeare an export data
+    $('.levelCode').text("app.objectTypes = " + JSON.stringify(app.objectTypes) + "; app.level = " + JSON.stringify(app.level)).show();
+};
+
+// Importing a level
+app.importLevel = function() {
+    // Hide export level textarea
+    $('.levelCode').hide();
+    
+    // Show import level elements
+    $('.importLevelCode, .importSubmit').show();
 };
 
 // App initializator
@@ -117,6 +130,7 @@ app.init = function() {
     $('.objTypeCreate').click(app.createObjType);
     $('.generateLevel').click(app.generateLevel);
     $('.exportLevel').click(app.exportLevel);
+    $('.importLevel').click(app.importLevel);
 };
 
 // Starting an application
