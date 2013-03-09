@@ -30,7 +30,7 @@ app.rocketPrototype = {
         
         // Setting of a cached image to the rocket
         this.image    = new CAAT.SpriteImage().initialize(app.director.getImage('rocket'), 1, 1);
-        this.actor.setBackgroundImage(this.image.getRef(), true).setSpriteIndex(0);        
+        this.actor.setBackgroundImage(this.image.getRef(), true).setSpriteIndex(0);
 
         // Adding of a CAAT actor to scene
         app.scene.addChild(this.actor);

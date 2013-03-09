@@ -65,8 +65,8 @@ app.Physics = {
             // Debugging is enabled
             // Adding canvas for debugging
             var canvas          = document.createElement('canvas');
-            canvas.width        = app.canvas.w;
-            canvas.height       = app.canvas.h;
+            canvas.width        = app.width;
+            canvas.height       = app.height;
             canvas.setAttribute("class", "debug");
             document.body.appendChild(canvas);
 

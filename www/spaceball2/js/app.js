@@ -1,5 +1,24 @@
+// Defining antialias mode for cocoon JS
+app.setAntialias = function(platform) {
+    switch (platform) {
+        case "cocoon":
+            if (!app.antialias && typeof (ext) != "undefined") {
+                ext.IDTK_APP.makeCall("setDefaultAntialias", 0);
+            }
+            break;
+        case "webkit":
+            if (!app.antialias && typeof (ext) == "undefined") {    
+                document.querySelector('canvas').getContext('2d').webkitImageSmoothingEnabled = false
+            }
+            break;
+    }
+};
+
 // Application general constructor
 app.init = function() {
+    // Setting antialias mode for cocoon JS
+    this.setAntialias('cocoon');
+    
     // Box2D Physics initialization
     this.Physics.init(this.scale);
 
@@ -7,16 +26,19 @@ app.init = function() {
     this.Physics.debug(this.debug);
 
     // CAAT director object defining
-    this.director   = new CAAT.Director().initialize(this.canvas.w, this.canvas.h);
+    this.director   = new CAAT.Director().initialize(this.width, this.height);
+    
+    // Setting antialias mode for webkit
+    this.setAntialias('webkit');
 
     // Adding CAAT scene for production rendering
     this.scene       = this.director.createScene();
     
     // Adding of a background CAAT actor
-    this.background  = new CAAT.Actor().
-    setLocation(0, 0).
+    this.background  = new CAAT.Actor().setLocation(0, 0);
+    
     // Add event bubbling for rocket (so you could drag rocket or a scene)
-    enableEvents(false);
+    this.background.enableEvents(false);
     this.scene.addChild(this.background);
     
     // Load recources
@@ -48,8 +70,8 @@ app.createLevel = function(level) {
     // Rocket creating
     this.rocket          = Object
                                 .create(this.rocketPrototype)
-                                .init({ x: 16,
-                                        y: (app.canvas.h - 120) / 30,
+                                .init({ x: app.width / 2 / 30,
+                                        y: (app.height - 60) / 30,
                                         id: "rocket"
                                     });
                                     
@@ -71,7 +93,7 @@ app.loadRecources = function() {
         [
             {id:'rocket',       url:'img/paddleRed.png'},
             {id:'redBrick',     url:'img/redBrick.png'},
-            {id:'level_1',      url:'img/levels/metallic_1.jpg'},
+            {id:'level_1',      url:'img/levels/bg1.jpg'},
             {id:'ballGrey',     url:'img/ballGrey.png'}
         ],
         function(counter, images) {
