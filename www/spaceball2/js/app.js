@@ -16,6 +16,12 @@ app.setAntialias = function(platform) {
 
 // Application general constructor
 app.init = function() {
+    // Check if height of app is very small
+    if (this.width / this.height > 2) {
+        // correct height
+        this.height = 400;
+    };
+    
     // Setting antialias mode for cocoon JS
     this.setAntialias('cocoon');
     

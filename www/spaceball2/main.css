@@ -94,3 +94,8 @@ html, body {
     top: 0;
     left: 0;
 }
+
+canvas {
+    display: block;
+    margin: 0 auto;
+}
