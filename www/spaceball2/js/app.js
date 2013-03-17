@@ -91,10 +91,20 @@ app.createLevel = function(level) {
                                         speed: 8,
                                         id: "first"
                                     }).timeOutBeforePush();
+                                    
+    // Starting music
+    app.director.audioLoop('music');
 }
 
 // Loading recources
 app.loadRecources = function() {
+    // Load audio 
+    app.director.
+            addAudio('music', 'snd/0.mp3').
+            addAudio('1', 'snd/1.mp3').
+            addAudio('2', 'snd/2.mp3').
+            addAudio('3', 'snd/3.mp3');
+    
     new CAAT.ImagePreloader().loadImages(
         [
             {id:'rocket',       url:'img/paddleRed.png'},
@@ -117,7 +127,9 @@ app.loadRecources = function() {
             //rocket.image    = new CAAT.SpriteImage().initialize(director.getImage('rocket'), 1, 1);
             //rocket.actor.setBackgroundImage(rocket.image.getRef(), true).setSpriteIndex(0);
         }
-    );    
+    );
+
+
 }
 
 // Application start

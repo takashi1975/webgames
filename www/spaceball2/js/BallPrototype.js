@@ -114,6 +114,9 @@ app.ball = {
         brick: function(brick, ball, impulse) {
             // Destroy a brick
             app.stepActionsQueue.push({object: app.bricks[brick.details.id], method: 'destroy'});
+            
+            // Play brick destroying audio
+            app.director.audioPlay('1');
         },
         
         // For a rocket (ricochet)
@@ -144,6 +147,9 @@ app.ball = {
 
                 // Pushing a ball with an old speed but in a new direction angle
                 ball.objReference.push(angleDegrees, ball.objReference.speed);
+                
+                // Play rocket hit audio
+                app.director.audioPlay('2');
             }
         }
     },
