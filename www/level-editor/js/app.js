@@ -63,15 +63,18 @@ app.createObjType = function() {
         objType[$(item).attr('name')] = $(item).val();
     });
     
+    app.buildObjTypeSelector(objTypeName, $('.objectForm input.attr.color').val());
+};
+
+// Build obj type selector dom object
+app.buildObjTypeSelector = function(name, background) {
     // Add object type in object types container
     $('<div/>', {
-                id: objTypeName,
+                id: name,
                 class: 'objectType',
-                style: 'background: ' + $('.objectForm input.attr.color').val()
-            }).html(objTypeName).appendTo('.objTypes').click(app.selectObjType);
-    
-    // Add selecting handler for object type
-    
+                style: 'background: ' + background
+            }).html(name).appendTo('.objTypes')
+            .click(app.selectObjType); // Add selecting handler for object type
 };
 
 // Generating of a level
@@ -88,14 +91,7 @@ app.generateLevel = function() {
     // Building of an empty blocks in level according to level X, Y size
     for (var i = 1; i <= x; i++) { 
         for (var k = 1; k <= y; k++) {
-            $('<div/>', {
-                id: i + '-' + k,
-                style: 'left:' + i * 25 + 'px; top:' + k * 25 + 'px;',
-                'class': 'levelBlock',
-                'data-x': i,
-                'data-y': k,
-                title: i + '-' + k + 'empty'
-            }).appendTo(level).click(app.applyObjType);
+            app.buildLevelBlock(i, k, 'empty', '');
             
             // Add a level block to app level data object 
             app.level.data[i + '-' + k] = {};
@@ -105,6 +101,18 @@ app.generateLevel = function() {
     // Setting level title
     app.level.title = title;
 };
+
+// Building of a level block dom element
+app.buildLevelBlock = function(x, y, objType, color) {
+    $('<div/>', {
+        id: x + '-' + y,
+        style: 'left:' + x * 25 + 'px; top:' + y * 25 + 'px; background:' + color,
+        'class': 'levelBlock',
+        'data-x': x,
+        'data-y': y,
+        title: x + '-' + y + ': ' + objType
+    }).appendTo($('.level')).click(app.applyObjType);
+}
 
 // Exporting a level
 app.exportLevel = function() {
@@ -124,6 +132,27 @@ app.importLevel = function() {
     $('.importLevelCode, .importSubmit').show();
 };
 
+// Submitting of level importing
+app.importLevelSubmit = function() {
+    var importCode  = $('.importLevelCode').val();
+    
+    // Evaluating of imported level code
+    eval(importCode);
+    
+    // Build object types selectors
+    $.each(app.objectTypes, function(key, item) {
+        app.buildObjTypeSelector(item.name, item.color);    
+    });
+    
+    // Cleanup of level dom
+    $('.level').html('');
+    
+    // Build level
+    $.each(app.level.data, function(key, item) {
+        app.buildLevelBlock(item.x, item.y, item.objType, app.objectTypes[item.objType].color);
+    });
+};
+
 // App initializator
 app.init = function() {
     // Add buttons handlers
@@ -131,6 +160,7 @@ app.init = function() {
     $('.generateLevel').click(app.generateLevel);
     $('.exportLevel').click(app.exportLevel);
     $('.importLevel').click(app.importLevel);
+    $('.importSubmit').click(app.importLevelSubmit);
 };
 
 // Starting an application
