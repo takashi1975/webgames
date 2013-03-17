@@ -6,8 +6,6 @@ app.rocketPrototype = {
             height  = 0.9,
             caatX   = (data.x - width / 2) * app.scale,
             caatY   = (data.y - height / 2) * app.scale,
-            caatWidth    = width * app.scale,
-            caatHeight   = height * app.scale,
             details = {
                 shape: "block",
                 x: data.x,
@@ -45,8 +43,8 @@ app.rocketPrototype = {
 
     // Updating of ball CAAT actor location according to Box2D body location
     update: function() {
-        var x = (this.body.m_xf.position.x - this.body.m_userData.details.width / 2) * app.scale,
-            y = (this.body.m_xf.position.y - this.body.m_userData.details.height / 2) * app.scale;
+        var x = parseInt((this.body.m_xf.position.x - this.body.m_userData.details.width / 2) * app.scale),
+            y = parseInt((this.body.m_xf.position.y - this.body.m_userData.details.height / 2) * app.scale);
 
         this.actor.setLocation(x, y);
     },

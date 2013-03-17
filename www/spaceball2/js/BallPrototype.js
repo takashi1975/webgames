@@ -10,7 +10,6 @@ app.ball = {
     init: function(data) {
         var caatX   = data.x * app.scale - data.radius * app.scale,
             caatY   = data.y * app.scale - data.radius * app.scale,
-            caatWidth    = data.radius * app.scale * 2,
             details = {
                 shape: "circle",
                 x: data.x,
@@ -84,8 +83,8 @@ app.ball = {
         // Update preprocess for a ball before rendering
         this.updatePreprocess();
         
-        var x = (this.body.m_xf.position.x - this.body.m_userData.details.radius) * app.scale,
-            y = (this.body.m_xf.position.y - this.body.m_userData.details.radius) * app.scale;
+        var x = parseInt((this.body.m_xf.position.x - this.body.m_userData.details.radius) * app.scale),
+            y = parseInt((this.body.m_xf.position.y - this.body.m_userData.details.radius) * app.scale);
 
         this.actor.setLocation(x, y);
     },

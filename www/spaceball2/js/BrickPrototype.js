@@ -7,10 +7,8 @@ app.brick = {
     init: function(data) {
         var width   = 2.1,
             height  = 1.05,
-            caatX   = (width * data.x + 0.5 - width / 2) * app.scale,
-            caatY   = (height * data.y + 1 - height / 2) * app.scale,
-            caatWidth    = width * app.scale,
-            caatHeight   = height * app.scale,
+            caatX   = parseInt((width * data.x + 0.5 - width / 2) * app.scale),
+            caatY   = parseInt((height * data.y + 1 - height / 2) * app.scale),
             details = {
                 shape: "block",
                 x: data.x * width + 0.5,
