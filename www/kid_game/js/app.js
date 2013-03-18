@@ -50,6 +50,24 @@ app.startGame = function(level) {
     this.splashScreen.scene.addChild(this.splashScreen.backgroundActor);
     this.splashScreen.backgroundActor.setBackgroundImage(app.director.getImage('splash'), true);
     
+    // Adding of a button CAAT actor for back to splashScreen screen
+    this.splashScreen.button = app.createButton(this.director, 'play');
+    this.splashScreen.button.mouseClick = function(e) {
+        self.director.easeInOut(
+            1,
+            CAAT.Scene.EASE_TRANSLATE,
+            CAAT.Actor.ANCHOR_RIGHT,
+            0,
+            CAAT.Scene.EASE_TRANSLATE,
+            CAAT.Actor.ANCHOR_LEFT,
+            2000,
+            false,
+            new CAAT.Interpolator().createExponentialOutInterpolator(6, false),
+            new CAAT.Interpolator().createExponentialOutInterpolator(6, false)
+        );
+    };
+    this.splashScreen.scene.addChild(this.splashScreen.button);        
+    
     // Adding of a background CAAT actor for settings screen
     this.settingsScreen.backgroundActor  = new CAAT.Actor().setLocation(0, 0);
     this.settingsScreen.scene.addChild(this.settingsScreen.backgroundActor);
@@ -58,11 +76,18 @@ app.startGame = function(level) {
     // Adding of a button CAAT actor for settings screen
     this.settingsScreen.button = app.createButton(this.director, 'Go to game scene');
     this.settingsScreen.button.mouseClick = function(e) {
-        self.director.switchToNextScene(
+        self.director.easeInOut(
+            2,
+            CAAT.Scene.EASE_TRANSLATE,
+            CAAT.Actor.ANCHOR_RIGHT,
+            1,
+            CAAT.Scene.EASE_TRANSLATE,
+            CAAT.Actor.ANCHOR_LEFT,
             2000,
             false,
-            true
-        )
+            new CAAT.Interpolator().createBounceOutInterpolator(),
+            new CAAT.Interpolator().createBounceOutInterpolator()
+        );
     };
     this.settingsScreen.scene.addChild(this.settingsScreen.button);    
 
@@ -91,24 +116,22 @@ app.startGame = function(level) {
     // Adding of a button CAAT actor for back to settings screen
     this.gameScreen.button = app.createButton(this.director, 'Go to settings scene');
     this.gameScreen.button.mouseClick = function(e) {
-        self.director.switchToPrevScene(
+        self.director.easeInOut(
+            1,
+            CAAT.Scene.EASE_TRANSLATE,
+            CAAT.Actor.ANCHOR_RIGHT,
+            2,
+            CAAT.Scene.EASE_TRANSLATE,
+            CAAT.Actor.ANCHOR_LEFT,
             2000,
             false,
-            true
-        )
+            new CAAT.Interpolator().createBounceOutInterpolator(),
+            new CAAT.Interpolator().createBounceOutInterpolator()
+        );
     };
     this.gameScreen.scene.addChild(this.gameScreen.button);       
 
     this.director.setScene(0);
-    
-    setTimeout(function() {
-        self.director.switchToNextScene(
-            2000,
-            false,
-            true
-        )
-    }, 2000);
-
 }
 
 // create an actor with a custom paint method. its behavior resembles that of
