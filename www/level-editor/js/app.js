@@ -26,6 +26,11 @@ app.selectObjType = function() {
 
     app.selectedObjType         = app.objectTypes[$(this).attr('id')];
     app.selectedObjType.name    = $(this).attr('id');
+    
+    // Update editor for selected object
+    for (value in app.selectedObjType) {
+        $("." + value).val(app.selectedObjType[value]);
+    }
 };
 
 // Applyinf of an object type to level block
@@ -68,13 +73,20 @@ app.createObjType = function() {
 
 // Build obj type selector dom object
 app.buildObjTypeSelector = function(name, background) {
-    // Add object type in object types container
-    $('<div/>', {
-                id: name,
-                class: 'objectType',
-                style: 'background: ' + background
-            }).html(name).appendTo('.objTypes')
-            .click(app.selectObjType); // Add selecting handler for object type
+    // Check if object type selector already exist
+    if ($('#' + name)[0]) {
+        // Update existing object type
+        $('#' + name).css("background", background);
+        console.log('update...');
+    } else {
+        // Add object type in object types container
+        $('<div/>', {
+                    id: name,
+                    class: 'objectType',
+                    style: 'background: ' + background
+                }).html(name).appendTo('.objTypes')
+                .click(app.selectObjType); // Add selecting handler for object type
+    }
 };
 
 // Generating of a level
@@ -94,7 +106,7 @@ app.generateLevel = function() {
             app.buildLevelBlock(i, k, 'empty', '');
             
             // Add a level block to app level data object 
-            app.level.data[i + '-' + k] = {};
+            app.level.data[i + '-' + k] = {x:i, y:k, objType:"none"};
         }
     }
     
@@ -139,18 +151,23 @@ app.importLevelSubmit = function() {
     // Evaluating of imported level code
     eval(importCode);
     
+    // Cleanup of level dom
+    $('.level, .objTypes.form').html('');
+    
     // Build object types selectors
     $.each(app.objectTypes, function(key, item) {
-        app.buildObjTypeSelector(item.name, item.color);    
+        app.buildObjTypeSelector(key, item.color);    
     });
-    
-    // Cleanup of level dom
-    $('.level').html('');
     
     // Build level
     $.each(app.level.data, function(key, item) {
-        app.buildLevelBlock(item.x, item.y, item.objType, app.objectTypes[item.objType].color);
+        var objType = (item.objType) ? item.objType : "none",
+            color   = (app.objectTypes[item.objType]) ? app.objectTypes[item.objType].color : "lightgrey";
+        app.buildLevelBlock(item.x, item.y, objType, color);
     });
+    
+    // Update level title
+    $('.levelTitle').val(app.level.title);
 };
 
 // App initializator
