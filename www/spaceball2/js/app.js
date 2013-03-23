@@ -58,15 +58,20 @@ app.init = function() {
 app.createLevel = function(level) {
     var self    = this,
         level   = 'level_' + level;
-        bricks  = Object.keys(app[level]);
+        bricks  = Object.keys(app[level].data);
 
     // Level background setting
     this.background.setBackgroundImage(app.director.getImage(level), true);
     
     // Bricks field generating
     bricks.forEach(function(brickId) {
-        var brick   = app[level][brickId];
+        var brick   = app[level].data[brickId];
         brick.id    = brickId;
+        
+        // Color setting
+        brick.color    = app.objectTypes[brick.objType].color;
+        
+        
         self.bricks[brickId]    = Object.create(self.brick).init(brick);
     });
     
@@ -109,6 +114,13 @@ app.loadRecources = function() {
         [
             {id:'rocket',       url:'img/paddleRed.png'},
             {id:'redBrick',     url:'img/redBrick.png'},
+            {id:'red',          url:'img/redBrick.png'},
+            {id:'blue',         url:'img/blueBrick.png'},
+            {id:'green',        url:'img/greenBrick.png'},
+            {id:'lilac',        url:'img/lilacBrick.png'},
+            {id:'yellow',       url:'img/yellowBrick.png'},
+            {id:'orange',       url:'img/orangeBrick.png'},
+            {id:'cyan',         url:'img/cyanBrick.png'},
             {id:'level_1',      url:'img/levels/bg1.jpg'},
             {id:'ballGrey',     url:'img/ballGrey.png'}
         ],

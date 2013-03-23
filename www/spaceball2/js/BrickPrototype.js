@@ -17,7 +17,8 @@ app.brick = {
                 height: height,
                 bodyType: "static",
                 type: "brick",
-                id: data.id
+                id: data.id,
+                color: data.color
             };
         // Set id of this object
         this.id     = data.id;
@@ -29,9 +30,9 @@ app.brick = {
         this.actor  = new CAAT.Actor().
         setLocation(caatX, caatY).
         enableEvents(false);
-    
+
         // Setting of a cached image to the brick
-        this.image    = app.director.getImage('redBrick');
+        this.image    = app.director.getImage(data.color);
         this.actor.setBackgroundImage(this.image, true);
 
         // Adding of a CAAT actor to scene

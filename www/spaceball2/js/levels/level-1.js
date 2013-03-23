@@ -1,48 +1,4 @@
-app.objectTypes = {
-    "red":{
-        "type":"brick",
-        "img":"redBrick.png",
-        "color":"red",
-        "name":"red"
-    },
-    "cyan":{
-        "type":"brick",
-        "img":"cyanBrick.png",
-        "color":"cyan",
-        "name":"cyan"
-    },
-    "green":{
-        "type":"brick",
-        "img":"greenBrick.png",
-        "color":"green",
-        "name":"green"
-    },
-    "yellow":{
-        "type":"brick",
-        "img":"yellowBrick.png",
-        "color":"yellow",
-        "name":"yellow"
-    },
-    "lilac":{
-        "type":"brick",
-        "img":"lilacBrick.png",
-        "color":"purple",
-        "name":"lilac"
-    },
-    "blue":{
-        "type":"brick",
-        "img":"blueBrick.png",
-        "color":"blue",
-        "name":"blue"
-    },
-    "orange":{
-        "type":"brick",
-        "img":"orangeBrick.png",
-        "color":"orange",
-        "name":"orange"
-    }
-};
-app.level = {
+app.level_1 = {
     "title":"level_1",
     "data":{
         "1-1":{
