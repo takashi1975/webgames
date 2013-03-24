@@ -105,10 +105,10 @@ app.createLevel = function(level) {
 app.loadRecources = function() {
     // Load audio 
     app.director.
-            addAudio('music', 'snd/0.mp3').
-            addAudio('1', 'snd/1.mp3').
-            addAudio('2', 'snd/2.mp3').
-            addAudio('3', 'snd/3.mp3');
+            addAudio('one', 'snd/1.mp3').
+            addAudio('two', 'snd/2.mp3').
+            addAudio('three', 'snd/3.mp3').
+            addAudio('music', 'snd/0.mp3');
     
     new CAAT.ImagePreloader().loadImages(
         [
