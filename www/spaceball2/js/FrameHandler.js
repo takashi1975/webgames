@@ -11,9 +11,10 @@ app.frameHandler = function(director_time) {
     
     // Evaluating of application actions queue
     for (key in app.stepActionsQueue) {
-        var object  = app.stepActionsQueue[key].object;
-        var method  = app.stepActionsQueue[key].method;
-        object[method]();
+        var object      = app.stepActionsQueue[key].object,
+            method      = app.stepActionsQueue[key].method,
+            argument    = app.stepActionsQueue[key].argument;
+        object[method](argument);
     }
     
     // clearing of application actions queue

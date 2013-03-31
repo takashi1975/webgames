@@ -48,7 +48,7 @@ app.init = function() {
     this.scene.addChild(this.background);
     
     // Load recources
-    this.loadRecources();
+    this.loadResources();
     
     // CAAT animation starting
     this.director.loop(1);
@@ -65,12 +65,15 @@ app.createLevel = function(level) {
     
     // Bricks field generating
     bricks.forEach(function(brickId) {
-        var brick   = app[level].data[brickId];
+        var brick   = Object.create(app[level].data[brickId]);
         brick.id    = brickId;
         
         // Color setting
-        brick.color    = app.objectTypes[brick.objType].color;
+        brick.color    = app.objectTypes[brick.objType].color;        
         
+        // Correcting brick position
+        brick.x        = brick.x - 0.15;
+        brick.y        = brick.y - 0.3;
         
         self.bricks[brickId]    = Object.create(self.brick).init(brick);
     });
@@ -87,61 +90,10 @@ app.createLevel = function(level) {
                                     });
                                     
     // First Balls creating
-    this.balls.first     = Object
-                                .create(this.ball)
-                                .init({ x: this.rocket.body.m_xf.position.x,
-                                        y: this.rocket.body.m_xf.position.y - 0.9,
-                                        radius: 0.35,
-                                        angle: 45,
-                                        speed: 8,
-                                        id: "first"
-                                    }).timeOutBeforePush();
+    this.ball.add('first');
                                     
     // Starting music
-    app.director.audioLoop('music');
-}
-
-// Loading recources
-app.loadRecources = function() {
-    // Load audio 
-    app.director.
-            addAudio('one', 'snd/1.mp3').
-            addAudio('two', 'snd/2.mp3').
-            addAudio('three', 'snd/3.mp3').
-            addAudio('music', 'snd/0.mp3');
-    
-    new CAAT.ImagePreloader().loadImages(
-        [
-            {id:'rocket',       url:'img/paddleRed.png'},
-            {id:'redBrick',     url:'img/redBrick.png'},
-            {id:'red',          url:'img/redBrick.png'},
-            {id:'blue',         url:'img/blueBrick.png'},
-            {id:'green',        url:'img/greenBrick.png'},
-            {id:'lilac',        url:'img/lilacBrick.png'},
-            {id:'yellow',       url:'img/yellowBrick.png'},
-            {id:'orange',       url:'img/orangeBrick.png'},
-            {id:'cyan',         url:'img/cyanBrick.png'},
-            {id:'level_1',      url:'img/levels/bg1.jpg'},
-            {id:'ballGrey',     url:'img/ballGrey.png'}
-        ],
-        function(counter, images) {
-            console.log('Loading of ' + counter);
-            if (counter == images.length) {
-                // Caching of loaded images in director object
-                app.director.setImagesCache(images);
-                
-                // Level creating
-                app.createLevel(1);
-                
-                // Adding of handler for each frame of animation and simulation
-                app.director.onRenderStart = app.frameHandler;
-            }
-            //rocket.image    = new CAAT.SpriteImage().initialize(director.getImage('rocket'), 1, 1);
-            //rocket.actor.setBackgroundImage(rocket.image.getRef(), true).setSpriteIndex(0);
-        }
-    );
-
-
+    app.director.audioLoop('music_1');
 }
 
 // Application start

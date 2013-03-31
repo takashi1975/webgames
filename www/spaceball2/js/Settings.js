@@ -3,6 +3,9 @@ var app = {
     // World scale coefficient for rendering in CAAT with Box2D units
     scale: 30,
     
+    // Initila lives number
+    lives: 3,
+    
     // Width of app    
     //width: window.innerWidth / 2,
     width: 640,

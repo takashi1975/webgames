@@ -19,6 +19,9 @@ app.ball = {
                 type: "ball",
                 id: data.id
             };
+            
+        // Defining object ID
+        this.id = data.id;
 
         // Box2D body exemplar creating
         this.body = Object.create(app.Body).init(app.Physics, details);
@@ -108,6 +111,33 @@ app.ball = {
         this.speed  = speed;
     },
     
+    // Destructor
+    destroy: function() {
+        // Destroying of a Box2d body
+        app.Physics.world.DestroyBody(this.body);
+        
+        // Destroying of an Actor
+        app.scene.removeChild(this.actor);
+         
+        // Destroying of this object
+        delete app.balls[this.id];
+        console.log(this);
+        delete this;
+    },
+    
+    // Add a ball in the game
+    add: function(id) {
+        app.balls[id] = Object
+            .create(app.ball)
+            .init({ x: app.rocket.body.m_xf.position.x,
+                    y: app.rocket.body.m_xf.position.y - 0.9,
+                    radius: 0.35,
+                    angle: 45,
+                    speed: 8,
+                    id: id
+             }).timeOutBeforePush();        
+    },
+    
     // Collision handlers
     collisionHandlers: {
         // For brick
@@ -116,7 +146,26 @@ app.ball = {
             app.stepActionsQueue.push({object: app.bricks[brick.details.id], method: 'destroy'});
             
             // Play brick destroying audio
-            app.director.audioPlay('one');
+            app.director.audioPlay('brickSnd');
+        },
+        
+        // For a wall collision
+        wall: function(wall, ball, impulse) {
+            if (wall.details.id == "bottom") {
+                // Destroy this ball
+                app.stepActionsQueue.push({object: app.balls[ball.details.id], method: 'destroy'});
+                app.lives = app.lives - 1;
+                
+                if (app.lives < 1) {
+                    alert("Game over!");                    
+                } else {
+                    app.stepActionsQueue.push({object: app.ball, method: 'add', argument: 'first'});
+                }
+                
+            } else {
+                // Play wall hit audio
+                app.director.audioPlay('rocketSnd');
+            }
         },
         
         // For a rocket (ricochet)
@@ -149,7 +198,7 @@ app.ball = {
                 ball.objReference.push(angleDegrees, ball.objReference.speed);
                 
                 // Play rocket hit audio
-                app.director.audioPlay('two');
+                app.director.audioPlay('rocketSnd');
             }
         }
     },
